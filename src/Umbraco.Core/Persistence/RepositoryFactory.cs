@@ -341,5 +341,14 @@ namespace Umbraco.Core.Persistence
                 _logger, _sqlSyntax,
                 containerObjectType);
         }
+
+        public IRedirectUrlRepository CreateRedirectUrlRepository(IDatabaseUnitOfWork uow)
+        {
+            return new RedirectUrlRepository(
+                uow,
+                _cacheHelper,
+                _logger,
+                _sqlSyntax);
+        }
     }
 }
