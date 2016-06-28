@@ -260,6 +260,10 @@ namespace Umbraco.Web.Editors
                                     controller => controller.GetAllowedChildren(0))
                             },
                             {
+                                "schemaTypeApiBaseUrl", Url.GetUmbracoApiServiceBaseUrl<SchemaTypeController>(
+                                    controller => controller.GetAll())
+                            },
+                            {
                                 "macroApiBaseUrl", Url.GetUmbracoApiServiceBaseUrl<MacroController>(
                                     controller => controller.GetMacroParameters(0))
                             },
@@ -350,6 +354,10 @@ namespace Umbraco.Web.Editors
                             {
                                 "xmlDataIntegrityBaseUrl", Url.GetUmbracoApiServiceBaseUrl<XmlDataIntegrityController>(
                                     controller => controller.CheckContentXmlTable())
+                            },
+                            {
+                                "nestedContentApiBaseUrl", Url.GetUmbracoApiServiceBaseUrl<NestedContentController>(
+                                    controller => controller.GetContentTypes())
                             }
                         }
                     },

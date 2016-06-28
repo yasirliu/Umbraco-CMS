@@ -1,0 +1,57 @@
+﻿<div id="nested-content--{{model.id}}" class="nested-content"
+     ng-controller="Umbraco.PropertyEditors.NestedContentController"
+     ng-class="{'nested-content--narrow':!wideMode, 'nested-content--wide':wideMode}">
+    <ng-form>
+
+        <div class="nested-content__items" ng-hide="nodes.length == 0" ui-sortable="sortableOptions" ng-model="nodes">
+
+            <div class="nested-content__item" ng-repeat="node in nodes" ng-class="{ 'nested-content__item--active' : $parent.realCurrentNode.key == node.key, 'nested-content__item--single' : $parent.singleMode }">
+
+                <div class="nested-content__header-bar" ng-click="$parent.editNode($index)" ng-hide="$parent.singleMode">
+
+                    <div class="nested-content__heading">
+                        <i class="icon icon-navigation nested-content__icon--move nested-content__header-icon" title="{{moveIconTitle}}"></i>
+                        <i class="icon nested-content__header-icon" ng-class="$parent.getIcon($index)"></i>
+                        <span ng-bind="$parent.getName($index)"></span>
+                    </div>
+
+                    <div class="nested-content__icons" ng-click="$event.stopPropagation();">
+
+                        <div class="delete-action" style="position: relative; display: inline-block;" ng-class="{ 'nested-content__icon--disabled': $parent.nodes.length <= $parent.minItems }">
+                            <i class="icon-trash nested-content__header-icon" ng-click="$parent.showDeletePrompt($index);"></i>
+                            <umb-confirm-action ng-if="$parent.deletePromptIndex == $index"
+                                direction="left"
+                                on-confirm="$parent.confirmDelete($index)"
+                                on-cancel="$parent.hideDeletePrompt()">
+                            </umb-confirm-action>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="nested-content__content" ng-show="$parent.realCurrentNode.key == node.key && !$parent.sorting">
+                    <nested-content-editor ng-model="node" tab-alias="ncTabAlias" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="nested-content__help-text" ng-show="nodes.length == 0">
+            <localize key="grid_addElement"></localize>
+        </div>
+
+        <div class="nested-content__footer-bar" ng-hide="nodes.length >= maxItems">
+            <a class="nested-content__icon" ng-click="openNodeTypePickerOverlay($event)" prevent-default>
+                <i class=" icon icon-add"></i>
+            </a>
+        </div>
+
+        <umb-overlay ng-if="nodeTypePickerOverlay.show"
+            model="nodeTypePickerOverlay"
+            view="nodeTypePickerOverlay.view"
+            position="target">
+        </umb-overlay>
+
+    </ng-form>
+</div>
