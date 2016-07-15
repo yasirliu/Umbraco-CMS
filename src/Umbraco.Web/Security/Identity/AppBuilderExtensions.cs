@@ -160,12 +160,27 @@ namespace Umbraco.Web.Security.Identity
             {
                 // Enables the application to validate the security stamp when the user 
                 // logs in. This is a security feature which is used when you 
-                // change a password or add an external login to your account.  
+                // change a password or modify an external login to your account.  
                 OnValidateIdentity = SecurityStampValidator
-                    .OnValidateIdentity<BackOfficeUserManager, BackOfficeIdentityUser, int>(
-                        TimeSpan.FromMinutes(30),
-                        (manager, user) => user.GenerateUserIdentityAsync(manager),
-                        identity => identity.GetUserId<int>()),
+                        .OnValidateIdentity<BackOfficeUserManager, BackOfficeIdentityUser, int>(
+                            TimeSpan.FromMinutes(1),
+                            (manager, user) => user.GenerateUserIdentityAsync(manager),
+                            identity => identity.GetUserId<int>()),
+                OnResponseSignOut = context =>
+                {
+                    var backofficeIdentity = context.OwinContext.Authentication.User.Identity as UmbracoBackOfficeIdentity;
+                    if (backofficeIdentity == null) return;
+                    var userMgr = context.OwinContext.GetUserManager<BackOfficeUserManager>();
+                    try
+                    {
+                        var id = Convert.ToInt32(backofficeIdentity.Id);
+                        var result = userMgr.UpdateSecurityStamp(id);
+                    }
+                    catch (Exception ex)
+                    {
+                        //wasn't an int
+                    }
+                }
             };
 
             var authOptions = CreateCookieAuthOptions();
