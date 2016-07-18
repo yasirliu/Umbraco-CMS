@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Umbraco.Core.Models.Membership;
@@ -9,6 +10,23 @@ namespace Umbraco.Core.Services
     /// </summary>
     public interface IUserService : IMembershipUserService
     {
+        /// <summary>
+        /// Appends a new login for the user to generate a new login token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="details">
+        /// A json structure of the details about the login (i.e headers, etc...)
+        /// </param>
+        /// <returns></returns>
+        Guid CreateLoginToken(IUser user, string details);
+
+        /// <summary>
+        /// Sets the login token to invalid when a user logs out of a session
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="token"></param>
+        void ClearLoginToken(IUser user, Guid token);
+
         /// <summary>
         /// This is simply a helper method which essentially just wraps the MembershipProvider's ChangePassword method
         /// </summary>

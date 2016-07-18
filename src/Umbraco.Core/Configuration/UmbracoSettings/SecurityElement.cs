@@ -64,6 +64,26 @@ namespace Umbraco.Core.Configuration.UmbracoSettings
             }
         }
 
+        /// <summary>
+        /// The amount of seconds to wait in between checking if the user's security stamp is still valid
+        /// </summary>
+        /// <remarks>
+        /// The security stamp is used for a "log out of all devices" procedure. A user's security stamp is 
+        /// updated whenenver a user's password is changed or an external authentication handler is removed from
+        /// their profile.
+        /// </remarks>
+        [ConfigurationProperty("securityStampValidationInterval")]
+        public InnerTextConfigurationElement<int> SecurityStampValidationInterval
+        {
+            get
+            {
+                return new OptionalInnerTextConfigurationElement<int>(
+                    (InnerTextConfigurationElement<int>) this["securityStampValidationInterval"],
+                    //set the default - 5 minutes
+                    300);
+            }
+        }
+
         bool ISecuritySection.KeepUserLoggedIn
         {
             get { return KeepUserLoggedIn; }
@@ -87,6 +107,11 @@ namespace Umbraco.Core.Configuration.UmbracoSettings
         string ISecuritySection.AuthCookieDomain
         {
             get { return AuthCookieDomain; }
+        }
+
+        int ISecuritySection.SecurityStampValidationInterval
+        {
+            get { return SecurityStampValidationInterval; }
         }
     }
 }

@@ -41,6 +41,7 @@ namespace Umbraco.Web.Models.Mapping
             config.CreateMap<IProfile, UserBasic>()
                   .ForMember(detail => detail.UserId, opt => opt.MapFrom(profile => GetIntId(profile.Id)));
 
+            //TODO: Find out where this is used, the session Id is not the user's security stamp therefore it should not be mapped this way. 
             config.CreateMap<IUser, UserData>()
                 .ConstructUsing((IUser user) => new UserData())
                 .ForMember(detail => detail.Id, opt => opt.MapFrom(user => user.Id))
@@ -50,8 +51,8 @@ namespace Umbraco.Web.Models.Mapping
                 .ForMember(detail => detail.StartContentNode, opt => opt.MapFrom(user => user.StartContentId))
                 .ForMember(detail => detail.StartMediaNode, opt => opt.MapFrom(user => user.StartMediaId))
                 .ForMember(detail => detail.Username, opt => opt.MapFrom(user => user.Username))
-                .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.GetUserCulture(applicationContext.Services.TextService)))
-                .ForMember(detail => detail.SessionId, opt => opt.MapFrom(user => user.SecurityStamp.IsNullOrWhiteSpace() ? Guid.NewGuid().ToString("N") : user.SecurityStamp));
+                .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.GetUserCulture(applicationContext.Services.TextService)));                
+                //.ForMember(detail => detail.SessionId, opt => opt.MapFrom(user => user.SecurityStamp.IsNullOrWhiteSpace() ? Guid.NewGuid().ToString("N") : user.SecurityStamp));
             
         } 
      

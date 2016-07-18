@@ -21,6 +21,7 @@ namespace Umbraco.Web.Security
         /// <returns></returns>
         internal static IPrincipal SetPrincipalForRequest(this HttpRequestMessage request, IUser user)
         {
+            //TODO: Here we are mapping the user to a UserData but it is not mapping the user's login token correctly
             var principal = new ClaimsPrincipal(
                 new UmbracoBackOfficeIdentity(
                     new ClaimsIdentity(),

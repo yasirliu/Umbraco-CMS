@@ -26,17 +26,18 @@ namespace Umbraco.Core.Models.Identity
                 .ForMember(user => user.AccessFailedCount, expression => expression.MapFrom(user => user.FailedPasswordAttempts))
                 .ForMember(user => user.AllowedSections, expression => expression.MapFrom(user => user.AllowedSections.ToArray()));
 
+            //TODO: Where is this used? The session Id might need to be assigned via the IUserService
             config.CreateMap<BackOfficeIdentityUser, UserData>()
                 .ConstructUsing((BackOfficeIdentityUser user) => new UserData(Guid.NewGuid().ToString("N"))) //this is the 'session id'
                 .ForMember(detail => detail.Id, opt => opt.MapFrom(user => user.Id))
                 .ForMember(detail => detail.AllowedApplications, opt => opt.MapFrom(user => user.AllowedSections))
                 .ForMember(detail => detail.RealName, opt => opt.MapFrom(user => user.Name))
-                .ForMember(detail => detail.Roles, opt => opt.MapFrom(user => new[] { user.UserTypeAlias }))
+                .ForMember(detail => detail.Roles, opt => opt.MapFrom(user => new[] {user.UserTypeAlias}))
                 .ForMember(detail => detail.StartContentNode, opt => opt.MapFrom(user => user.StartContentId))
                 .ForMember(detail => detail.StartMediaNode, opt => opt.MapFrom(user => user.StartMediaId))
                 .ForMember(detail => detail.Username, opt => opt.MapFrom(user => user.UserName))
-                .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.Culture))
-                .ForMember(detail => detail.SessionId, opt => opt.MapFrom(user => user.SecurityStamp.IsNullOrWhiteSpace() ? Guid.NewGuid().ToString("N") : user.SecurityStamp));
+                .ForMember(detail => detail.Culture, opt => opt.MapFrom(user => user.Culture));
+                //.ForMember(detail => detail.SessionId, opt => opt.MapFrom(user => user.SecurityStamp.IsNullOrWhiteSpace() ? Guid.NewGuid().ToString("N") : user.SecurityStamp));
         }
 
         private string GetPasswordHash(string storedPass)

@@ -41,7 +41,7 @@ namespace Umbraco.Core.Persistence.Repositories
             sql.Where(GetBaseWhereClause(), new { Id = id });
 
             var dto = Database.Fetch<UserDto, User2AppDto, UserDto>(new UserSectionRelator().Map, sql).FirstOrDefault();
-            
+
             if (dto == null)
                 return null;
 
@@ -58,13 +58,13 @@ namespace Umbraco.Core.Persistence.Repositories
 
             if (ids.Any())
             {
-                sql.Where("umbracoUser.id in (@ids)", new {ids = ids});
+                sql.Where("umbracoUser.id in (@ids)", new { ids = ids });
             }
-            
+
             return ConvertFromDtos(Database.Fetch<UserDto, User2AppDto, UserDto>(new UserSectionRelator().Map, sql))
                     .ToArray(); // important so we don't iterate twice, if we don't do this we can end up with null values in cache if we were caching.    
         }
-        
+
         protected override IEnumerable<IUser> PerformGetByQuery(IQuery<IUser> query)
         {
             var sqlClause = GetBaseQuery(false);
@@ -77,11 +77,11 @@ namespace Umbraco.Core.Persistence.Repositories
             return ConvertFromDtos(dtos)
                     .ToArray(); // important so we don't iterate twice, if we don't do this we can end up with null values in cache if we were caching.    
         }
-        
+
         #endregion
 
         #region Overrides of PetaPocoRepositoryBase<int,IUser>
-        
+
         protected override Sql GetBaseQuery(bool isCount)
         {
             var sql = new Sql();
@@ -113,7 +113,7 @@ namespace Umbraco.Core.Persistence.Repositories
         }
 
         protected override IEnumerable<string> GetDeleteClauses()
-        {            
+        {
             var list = new List<string>
                            {
                                "DELETE FROM cmsTask WHERE userId = @Id",
@@ -131,7 +131,7 @@ namespace Umbraco.Core.Persistence.Repositories
         {
             get { throw new NotImplementedException(); }
         }
-        
+
         protected override void PersistNewItem(IUser entity)
         {
             var userFactory = new UserFactory(entity.UserType);
@@ -141,7 +141,7 @@ namespace Umbraco.Core.Persistence.Repositories
             {
                 entity.SecurityStamp = Guid.NewGuid().ToString();
             }
-            
+
             var userDto = userFactory.BuildDto(entity);
 
             var id = Convert.ToInt32(Database.Insert(userDto));
@@ -181,8 +181,8 @@ namespace Umbraco.Core.Persistence.Repositories
                 {"startStructureID", "StartContentId"},
                 {"startMediaID", "StartMediaId"},
                 {"userName", "Name"},
-                {"userLogin", "Username"},                
-                {"userEmail", "Email"},                
+                {"userLogin", "Username"},
+                {"userEmail", "Email"},
                 {"userLanguage", "Language"},
                 {"securityStampToken", "SecurityStamp"},
                 {"lastLockoutDate", "LastLockoutDate"},
@@ -217,7 +217,7 @@ namespace Umbraco.Core.Persistence.Repositories
             {
                 Database.Update(userDto, changedCols);
             }
-            
+
             //update the sections if they've changed
             var user = (User)entity;
             if (user.IsPropertyDirty("AllowedSections"))
@@ -248,7 +248,7 @@ namespace Umbraco.Core.Persistence.Repositories
                     }
                 }
 
-                
+
             }
 
             entity.ResetDirtyProperties();
@@ -257,6 +257,43 @@ namespace Umbraco.Core.Persistence.Repositories
         #endregion
 
         #region Implementation of IUserRepository
+
+        /// <summary>
+        /// Appends a new login for the user to generate a new login token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="details">
+        /// A json structure of the details about the login (i.e headers, etc...)
+        /// </param>
+        /// <returns></returns>
+        public Guid CreateLoginToken(IUser user, string details)
+        {
+            if (user == null) throw new ArgumentNullException("user");
+
+            var token = Guid.NewGuid();
+            Database.Insert(new UserLoginDto
+            {
+                Details = details,
+                IsValid = true,
+                CreateDateUtc = DateTime.UtcNow,
+                UpdateDateUtc = DateTime.UtcNow,
+                LoginToken = token,
+                UserId = user.Id
+            });
+
+            return token;
+        }
+
+        /// <summary>
+        /// Sets the login token to invalid when a user logs out of a session
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="token"></param>
+        public void ClearLoginToken(IUser user, Guid token)
+        {
+            Database.Execute("UPDATE umbracoUserLogin SET isValid=@isValid,updateDateUtc=@updateDate WHERE userId=@userId,token=@token",
+                new { isValid = false, userId = user.Id, token = token, updateDate = DateTime.UtcNow });
+        }
 
         public int GetCountByQuery(IQuery<IUser> query)
         {
@@ -364,7 +401,7 @@ namespace Umbraco.Core.Persistence.Repositories
             //now we need to ensure this result is also ordered by the same order by clause
             return result.OrderBy(orderBy.Compile());
         }
-        
+
         /// <summary>
         /// Returns permissions for a given user for any number of nodes
         /// </summary>
@@ -410,7 +447,7 @@ namespace Umbraco.Core.Persistence.Repositories
             var allUserTypes = userTypeIds.Length == 0 ? Enumerable.Empty<IUserType>() : _userTypeRepository.GetAll(userTypeIds);
 
             return dtos.Select(dto =>
-                {   
+                {
                     var userType = allUserTypes.Single(x => x.Id == dto.Type);
 
                     var userFactory = new UserFactory(userType);

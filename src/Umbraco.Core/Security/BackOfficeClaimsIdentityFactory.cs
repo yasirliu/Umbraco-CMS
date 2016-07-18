@@ -24,6 +24,9 @@ namespace Umbraco.Core.Security
         {
             var baseIdentity = await base.CreateAsync(manager, user, authenticationType);
 
+            //TODO: This is creating the identity of the user used during login, check if this is only
+            // called once during login or everytime a request is made, we need to assign a login token
+            // somewhere
             var umbracoIdentity = new UmbracoBackOfficeIdentity(baseIdentity,
                 //set a new session id
                 new UserData

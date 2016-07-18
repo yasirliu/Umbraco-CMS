@@ -554,7 +554,16 @@ namespace Umbraco.Tests.Persistence.Repositories
             using (var repository = CreateRepository(unitOfWork, out contentTypeRepository))
             {
                 // Act
-                var content = repository.Get(NodeDto.NodeIdSeed + 3);
+                IContent content;
+                try
+                {
+                    DatabaseContext.Database.EnableSqlTrace = true;
+                    content = repository.Get(NodeDto.NodeIdSeed + 3);                    
+                }
+                finally
+                {
+                    DatabaseContext.Database.EnableSqlTrace = false;
+                }
 
                 // Assert
                 Assert.That(content.Id, Is.EqualTo(NodeDto.NodeIdSeed + 3));

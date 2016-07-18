@@ -128,6 +128,8 @@ namespace Umbraco.Web.Security
             owinCtx.Authentication.SignOut(Constants.Security.BackOfficeExternalAuthenticationType);
             
             var user = UserManager.FindByIdAsync(userId).Result;
+
+            //TODO: Here we are mapping the user to a UserData but it is not mapping the user's login token correctly
             var userData = Mapper.Map<UserData>(user);
             _httpContext.SetPrincipalForRequest(userData);
 
@@ -152,6 +154,7 @@ namespace Umbraco.Web.Security
             //ensure it's done for owin too
             _httpContext.GetOwinContext().Authentication.SignOut(Constants.Security.BackOfficeExternalAuthenticationType);
 
+            //TODO: Here we are mapping the user to a UserData but it is not mapping the user's login token correctly
             var ticket = _httpContext.CreateUmbracoAuthTicket(Mapper.Map<UserData>(user));
             return ticket;
         }

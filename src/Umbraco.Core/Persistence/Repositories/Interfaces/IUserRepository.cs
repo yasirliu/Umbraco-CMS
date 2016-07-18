@@ -9,6 +9,23 @@ namespace Umbraco.Core.Persistence.Repositories
     public interface IUserRepository : IRepositoryQueryable<int, IUser>
     {
         /// <summary>
+        /// Appends a new login for the user to generate a new login token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="details">
+        /// A json structure of the details about the login (i.e headers, etc...)
+        /// </param>
+        /// <returns></returns>
+        Guid CreateLoginToken(IUser user, string details);
+
+        /// <summary>
+        /// Sets the login token to invalid when a user logs out of a session
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="token"></param>
+        void ClearLoginToken(IUser user, Guid token);
+
+        /// <summary>
         /// Gets the count of items based on a complex query
         /// </summary>
         /// <param name="query"></param>

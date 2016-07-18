@@ -294,6 +294,9 @@ namespace Umbraco.Core.Security
             get { return UserData.Culture; }
         }
 
+        /// <summary>
+        /// Returns the current login session id
+        /// </summary>
         public string SessionId
         {
             get { return UserData.SessionId; }

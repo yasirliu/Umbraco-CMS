@@ -241,6 +241,35 @@ namespace Umbraco.Core.Services
         }
 
         /// <summary>
+        /// Appends a new login for the user to generate a new login token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="details">
+        /// A json structure of the details about the login (i.e headers, etc...)
+        /// </param>
+        /// <returns></returns>
+        public Guid CreateLoginToken(IUser user, string details)
+        {
+            using (var repository = RepositoryFactory.CreateUserRepository(UowProvider.GetUnitOfWork()))
+            {
+                return repository.CreateLoginToken(user, details);
+            }
+        }
+
+        /// <summary>
+        /// Sets the login token to invalid when a user logs out of a session
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="token"></param>
+        public void ClearLoginToken(IUser user, Guid token)
+        {
+            using (var repository = RepositoryFactory.CreateUserRepository(UowProvider.GetUnitOfWork()))
+            {
+                repository.ClearLoginToken(user, token);
+            }
+        }
+
+        /// <summary>
         /// This is simply a helper method which essentially just wraps the MembershipProvider's ChangePassword method
         /// </summary>
         /// <remarks>
