@@ -8,9 +8,10 @@ using Umbraco.Core.Configuration.UmbracoSettings;
 
 namespace Umbraco.Tests.TestHelpers
 {
-    public class SettingsForTests
+    public static class SettingsForTests
     {
-        // umbracoSettings
+        
+        private static readonly TestGlobalSettings GlobalSettings = new TestGlobalSettings();
 
         /// <summary>
         /// Sets the umbraco settings singleton to the object specified
@@ -42,7 +43,7 @@ namespace Umbraco.Tests.TestHelpers
             var providers = new Mock<IProvidersSection>();
             var help = new Mock<IHelpSection>();
             var routing = new Mock<IWebRoutingSection>();
-            var scripting = new Mock<IScriptingSection>();
+            var scripting = new Mock<IScriptingSection>();            
 
             settings.Setup(x => x.Content).Returns(content.Object);
             settings.Setup(x => x.Security).Returns(security.Object);
@@ -72,43 +73,24 @@ namespace Umbraco.Tests.TestHelpers
             settings.Setup(x => x.Templates.DefaultRenderingEngine).Returns(RenderingEngine.Mvc);
             
             return settings.Object;
-        }
-
-        // from appSettings
-
-        private static readonly IDictionary<string, string> SavedAppSettings = new Dictionary<string, string>();
-
-        static void SaveSetting(string key)
-        {
-            SavedAppSettings[key] = ConfigurationManager.AppSettings[key];
-        }
-
-        static void SaveSettings()
-        {
-            SaveSetting("umbracoHideTopLevelNodeFromPath");
-            SaveSetting("umbracoUseDirectoryUrls");
-            SaveSetting("umbracoPath");
-            SaveSetting("umbracoReservedPaths");
-            SaveSetting("umbracoReservedUrls");
-            SaveSetting("umbracoConfigurationStatus");
-        }
+        }      
 
         public static bool HideTopLevelNodeFromPath
         {
             get { return GlobalSettings.HideTopLevelNodeFromPath; }
-            set { ConfigurationManager.AppSettings.Set("umbracoHideTopLevelNodeFromPath", value ? "true" : "false"); }
+            set { GlobalSettings.HideTopLevelNodeFromPath = value; }
         }
 
         public static bool UseDirectoryUrls
         {
             get { return GlobalSettings.UseDirectoryUrls; }
-            set { ConfigurationManager.AppSettings.Set("umbracoUseDirectoryUrls", value ? "true" : "false"); }
+            set { GlobalSettings.UseDirectoryUrls = value; }
         }
 
         public static string UmbracoPath
         {
             get { return GlobalSettings.Path; }
-            set { ConfigurationManager.AppSettings.Set("umbracoPath", value); }
+            set { GlobalSettings.Path = value; }
         }
 
         public static string ReservedPaths
@@ -126,24 +108,21 @@ namespace Umbraco.Tests.TestHelpers
         public static string ConfigurationStatus
         {
             get { return GlobalSettings.ConfigurationStatus; }
-            set { ConfigurationManager.AppSettings.Set("umbracoConfigurationStatus", value); }
+            set { GlobalSettings.ConfigurationStatus = value; }
         }
 
         // reset & defaults
 
         static SettingsForTests()
         {
-            SaveSettings();
+            UmbracoConfig.For.SetGlobalConfig(GlobalSettings);
         }
 
         public static void Reset()
         {
             ResetUmbracoSettings();
-            GlobalSettings.Reset();
-
-            foreach (var kvp in SavedAppSettings)
-                ConfigurationManager.AppSettings.Set(kvp.Key, kvp.Value);
-
+            Core.Configuration.GlobalSettings.Reset();
+            
             // set some defaults that are wrong in the config file?!
             // this is annoying, really
             HideTopLevelNodeFromPath = false;
@@ -171,6 +150,108 @@ namespace Umbraco.Tests.TestHelpers
             }
 
             return _defaultSettings;
+        }
+
+        private class TestGlobalSettings : IGlobalSettings
+        {
+            public TestGlobalSettings()
+            {
+                ReservedUrls = string.Empty;
+                ReservedPaths = string.Empty;
+                ContentXmlFile = "~/App_Data/umbraco.config";
+                StorageDirectory = "~/App_Data";
+                Path = string.Empty;
+                ConfigurationStatus = string.Empty;
+                TimeOutInMinutes = 20;
+                UseDirectoryUrls = false;
+                DefaultUILanguage = string.Empty;
+                HideTopLevelNodeFromPath = false;
+                UseSSL = false;
+            }
+
+            /// <summary>
+            /// Gets the reserved urls from web.config.
+            /// </summary>
+            /// <value>The reserved urls.</value>
+            public string ReservedUrls { get; set; }
+
+            /// <summary>
+            /// Gets the reserved paths from web.config
+            /// </summary>
+            /// <value>The reserved paths.</value>
+            public string ReservedPaths { get; set; }
+
+            /// <summary>
+            /// Gets the name of the content XML file.
+            /// </summary>
+            /// <value>The content XML.</value>
+            /// <remarks>
+            /// Defaults to ~/App_Data/umbraco.config
+            /// </remarks>
+            public string ContentXmlFile { get; set; }
+
+            /// <summary>
+            /// Gets the path to the storage directory
+            /// </summary>
+            /// <value>The storage directory.</value>
+            public string StorageDirectory { get; set; }
+
+            /// <summary>
+            /// Gets the path to umbraco's root directory (/umbraco by default).
+            /// </summary>
+            /// <value>The path.</value>
+            public string Path { get; set; }
+
+            /// <summary>
+            /// This returns the string of the MVC Area route.
+            /// </summary>
+            /// <remarks>
+            /// This will return the MVC area that we will route all custom routes through like surface controllers, etc...
+            /// We will use the 'Path' (default ~/umbraco) to create it but since it cannot contain '/' and people may specify a path of ~/asdf/asdf/admin
+            /// we will convert the '/' to '-' and use that as the path. 
+            /// 
+            /// We also make sure that the virtual directory (SystemDirectories.Root) is stripped off first, otherwise we'd end up with something
+            /// like "MyVirtualDirectory-Umbraco" instead of just "Umbraco".
+            /// </remarks>
+            public string UmbracoMvcArea { get; set; }
+
+            /// <summary>
+            /// Gets or sets the configuration status. This will return the version number of the currently installed umbraco instance.
+            /// </summary>
+            /// <value>The configuration status.</value>
+            public string ConfigurationStatus { get; set; }
+
+            /// <summary>
+            /// Gets the time out in minutes.
+            /// </summary>
+            /// <value>The time out in minutes.</value>
+            public int TimeOutInMinutes { get; set; }
+
+            /// <summary>
+            /// Gets a value indicating whether umbraco uses directory urls.
+            /// </summary>
+            /// <value><c>true</c> if umbraco uses directory urls; otherwise, <c>false</c>.</value>
+            public bool UseDirectoryUrls { get; set; }
+
+            /// <summary>
+            /// Gets the default UI language.
+            /// </summary>
+            /// <value>The default UI language.</value>
+            public string DefaultUILanguage { get; set; }
+
+            /// <summary>
+            /// Gets a value indicating whether umbraco should hide top level nodes from generated urls.
+            /// </summary>
+            /// <value>
+            /// 	<c>true</c> if umbraco hides top level nodes from urls; otherwise, <c>false</c>.
+            /// </value>
+            public bool HideTopLevelNodeFromPath { get; set; }
+
+            /// <summary>
+            /// Gets a value indicating whether umbraco should force a secure (https) connection to the backoffice.
+            /// </summary>
+            /// <value><c>true</c> if [use SSL]; otherwise, <c>false</c>.</value>
+            public bool UseSSL { get; set; }
         }
     }
 }

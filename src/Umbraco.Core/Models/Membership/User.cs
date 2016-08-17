@@ -29,7 +29,7 @@ namespace Umbraco.Core.Models.Membership
             _sectionCollection = new ObservableCollection<string>();
             _addedSections = new List<string>();
             _removedSections = new List<string>();
-            _language = GlobalSettings.DefaultUILanguage;
+            _language = UmbracoConfig.For.GlobalSettings().DefaultUILanguage;
             _sectionCollection.CollectionChanged += SectionCollectionChanged;
             _isApproved = true;
             _isLockedOut = false;

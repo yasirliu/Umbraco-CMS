@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Events;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models.Membership;
@@ -137,7 +138,7 @@ namespace Umbraco.Core.Services
                 {
                     DefaultToLiveEditing = false,
                     Email = email,
-                    Language = Configuration.GlobalSettings.DefaultUILanguage,
+                    Language = UmbracoConfig.For.GlobalSettings().DefaultUILanguage,
                     Name = username,
                     RawPasswordValue = passwordValue,                    
                     Username = username,

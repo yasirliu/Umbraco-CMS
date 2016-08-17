@@ -10,7 +10,7 @@ namespace Umbraco.Core.Persistence.SqlSyntax
     /// <summary>
     /// Represents an SqlSyntaxProvider for Sql Ce
     /// </summary>
-    [SqlSyntaxProviderAttribute(Constants.DatabaseProviders.SqlCe)]
+    [SqlSyntaxProviderAttribute(Constants.Database.SqlCe)]
     public class SqlCeSyntaxProvider : MicrosoftSqlSyntaxProviderBase<SqlCeSyntaxProvider>
     {
         public SqlCeSyntaxProvider()

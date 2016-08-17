@@ -40,7 +40,7 @@ namespace umbraco.presentation.webservices
         {
             bool isUpgrade = false;
             // if it's an upgrade, you'll need to be logged in before we allow this call
-            if (!String.IsNullOrEmpty(global::Umbraco.Core.Configuration.GlobalSettings.ConfigurationStatus))
+            if (!String.IsNullOrEmpty(UmbracoConfig.For.GlobalSettings().ConfigurationStatus))
             {
                 isUpgrade = true;
                 try
@@ -70,7 +70,7 @@ namespace umbraco.presentation.webservices
             installCookie.SetValue(installId.ToString());
 
             string dbProvider = string.Empty;
-            if (string.IsNullOrEmpty(global::Umbraco.Core.Configuration.GlobalSettings.ConfigurationStatus) == false)
+            if (string.IsNullOrEmpty(UmbracoConfig.For.GlobalSettings().ConfigurationStatus) == false)
             dbProvider = ApplicationContext.Current.DatabaseContext.DatabaseProvider.ToString();
 
             var check = new global::Umbraco.Web.org.umbraco.update.CheckForUpgrade();

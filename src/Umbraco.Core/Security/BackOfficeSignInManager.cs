@@ -113,7 +113,7 @@ namespace Umbraco.Core.Security
                     IsPersistent = isPersistent,
                     AllowRefresh = true,
                     IssuedUtc = nowUtc,
-                    ExpiresUtc = nowUtc.AddMinutes(GlobalSettings.TimeOutInMinutes)
+                    ExpiresUtc = nowUtc.AddMinutes(UmbracoConfig.For.GlobalSettings().TimeOutInMinutes)
                 }, userIdentity, rememberBrowserIdentity);
             }
             else
@@ -123,7 +123,7 @@ namespace Umbraco.Core.Security
                     IsPersistent = isPersistent,
                     AllowRefresh = true,
                     IssuedUtc = nowUtc,
-                    ExpiresUtc = nowUtc.AddMinutes(GlobalSettings.TimeOutInMinutes)
+                    ExpiresUtc = nowUtc.AddMinutes(UmbracoConfig.For.GlobalSettings().TimeOutInMinutes)
                 }, userIdentity);
             }
 

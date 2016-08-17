@@ -23,7 +23,7 @@ namespace Umbraco.Web.Security.Identity
             _defaultUserType = defaultUserType;
             _defaultAllowedSections = defaultAllowedSections ?? new[] { "content", "media" };
             _autoLinkExternalAccount = autoLinkExternalAccount;
-            _defaultCulture = defaultCulture ?? GlobalSettings.DefaultUILanguage;
+            _defaultCulture = defaultCulture ?? UmbracoConfig.For.GlobalSettings().DefaultUILanguage;
         }
 
         private readonly string _defaultUserType;

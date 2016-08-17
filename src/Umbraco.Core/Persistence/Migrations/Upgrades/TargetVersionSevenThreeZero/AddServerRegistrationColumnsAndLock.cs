@@ -7,7 +7,7 @@ using Umbraco.Core.Persistence.SqlSyntax;
 
 namespace Umbraco.Core.Persistence.Migrations.Upgrades.TargetVersionSevenThreeZero
 {
-    [Migration("7.3.0", 17, GlobalSettings.UmbracoMigrationName)]
+    [Migration("7.3.0", 17, Constants.Database.UmbracoMigrationName)]
     public class AddServerRegistrationColumnsAndLock : MigrationBase
     {
         public AddServerRegistrationColumnsAndLock(ISqlSyntaxProvider sqlSyntax, ILogger logger)

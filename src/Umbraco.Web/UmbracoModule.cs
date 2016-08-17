@@ -199,7 +199,7 @@ namespace Umbraco.Web
 
 			// handle directory-urls used for asmx
 			// legacy - what's the point really?
-			if (/*maybeDoc &&*/ GlobalSettings.UseDirectoryUrls)
+			if (/*maybeDoc &&*/ UmbracoConfig.For.GlobalSettings().UseDirectoryUrls)
 			{
 				int asmxPos = lpath.IndexOf(".asmx/", StringComparison.OrdinalIgnoreCase);
 				if (asmxPos >= 0)
@@ -378,7 +378,7 @@ namespace Umbraco.Web
         private static void RewriteToBackOfficeHandler(HttpContextBase context)
         {
             // GlobalSettings.Path has already been through IOHelper.ResolveUrl() so it begins with / and vdir (if any)
-            var rewritePath = GlobalSettings.Path.TrimEnd(new[] { '/' }) + "/Default";
+            var rewritePath = UmbracoConfig.For.GlobalSettings().Path.TrimEnd(new[] { '/' }) + "/Default";
             // rewrite the path to the path of the handler (i.e. /umbraco/RenderMvc)
             context.RewritePath(rewritePath, "", "", false);
 
@@ -411,7 +411,7 @@ namespace Umbraco.Web
 			var query = pcr.Uri.Query.TrimStart(new[] { '?' });
 
             // GlobalSettings.Path has already been through IOHelper.ResolveUrl() so it begins with / and vdir (if any)
-            var rewritePath = GlobalSettings.Path.TrimEnd(new[] { '/' }) + "/RenderMvc";
+            var rewritePath = UmbracoConfig.For.GlobalSettings().Path.TrimEnd(new[] { '/' }) + "/RenderMvc";
             // rewrite the path to the path of the handler (i.e. /umbraco/RenderMvc)
             context.RewritePath(rewritePath, "", query, false);
 

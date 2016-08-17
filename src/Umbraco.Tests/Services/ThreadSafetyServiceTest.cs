@@ -40,7 +40,7 @@ namespace Umbraco.Tests.Services
 			//it is multi-threaded.
 			_dbFactory = new PerThreadDatabaseFactory(Logger);
 			//overwrite the local object
-            ApplicationContext.DatabaseContext = new DatabaseContext(_dbFactory, Logger, new SqlCeSyntaxProvider(), Constants.DatabaseProviders.SqlCe);
+            ApplicationContext.DatabaseContext = new DatabaseContext(_dbFactory, Logger, new SqlCeSyntaxProvider(), Constants.Database.SqlCe);
 
             //disable cache
 		    var cacheHelper = CacheHelper.CreateDisabledCacheHelper();
@@ -233,7 +233,7 @@ namespace Umbraco.Tests.Services
 			{
 				var db = _databases.GetOrAdd(
                     Thread.CurrentThread.ManagedThreadId,
-                    i => new UmbracoDatabase(Umbraco.Core.Configuration.GlobalSettings.UmbracoConnectionName, _logger));
+                    i => new UmbracoDatabase(Constants.Database.UmbracoConnectionName, _logger));
 				return db;
 			}
 

@@ -65,7 +65,7 @@ namespace Umbraco.Web.Install.InstallSteps
 
             var result = _applicationContext.DatabaseContext.ValidateDatabaseSchema();
             var determinedVersion = result.DetermineInstalledVersion();
-            if ((string.IsNullOrWhiteSpace(GlobalSettings.ConfigurationStatus) == false || determinedVersion.Equals(new Version(0, 0, 0)) == false)
+            if ((string.IsNullOrWhiteSpace(UmbracoConfig.For.GlobalSettings().ConfigurationStatus) == false || determinedVersion.Equals(new Version(0, 0, 0)) == false)
                 && UmbracoVersion.Current.Major > determinedVersion.Major)
             {
                 //it's an upgrade to a major version so we're gonna show this step if there are issues

@@ -49,7 +49,7 @@ namespace Umbraco.Tests.Configurations
         {
             SettingsForTests.UmbracoPath = path;
             SystemDirectories.Root = rootPath;
-            Assert.AreEqual(outcome, Umbraco.Core.Configuration.GlobalSettings.UmbracoMvcArea);
+            Assert.AreEqual(outcome, UmbracoConfig.For.GlobalSettings().UmbracoMvcArea);
         }
 
 	    [TestCase("/umbraco/umbraco.aspx")]
@@ -93,8 +93,8 @@ namespace Umbraco.Tests.Configurations
 		public void Is_Reserved_By_Route(string url, bool shouldMatch)
 		{
 			//reset the app config, we only want to test routes not the hard coded paths
-		    Umbraco.Core.Configuration.GlobalSettings.ReservedPaths = "";
-		    Umbraco.Core.Configuration.GlobalSettings.ReservedUrls = "";
+		    SettingsForTests.ReservedPaths = "";
+            SettingsForTests.ReservedUrls = "";
 
 			var routes = new RouteCollection();
 

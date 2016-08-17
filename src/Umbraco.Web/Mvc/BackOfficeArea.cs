@@ -26,7 +26,7 @@ namespace Umbraco.Web.Mvc
         {
             context.MapRoute(
                 "Umbraco_back_office",
-                GlobalSettings.UmbracoMvcArea + "/{action}/{id}",
+                UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/{action}/{id}",
                 new {controller = "BackOffice", action = "Default", id = UrlParameter.Optional},
                 //limit the action/id to only allow characters - this is so this route doesn't hog all other 
                 // routes like: /umbraco/channels/word.aspx, etc...
@@ -40,7 +40,7 @@ namespace Umbraco.Web.Mvc
             //Create the REST/web/script service routes
             context.MapRoute(
                 "Umbraco_web_services",
-                GlobalSettings.UmbracoMvcArea + "/RestServices/{controller}/{action}/{id}",
+                UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/RestServices/{controller}/{action}/{id}",
                 new {controller = "SaveFileController", action = "Index", id = UrlParameter.Optional},
                 //look in this namespace for controllers
                 new[] {"Umbraco.Web.WebServices"});
@@ -48,7 +48,7 @@ namespace Umbraco.Web.Mvc
 
         public override string AreaName
         {
-            get { return GlobalSettings.UmbracoMvcArea; }
+            get { return UmbracoConfig.For.GlobalSettings().UmbracoMvcArea; }
         }
     }
 }

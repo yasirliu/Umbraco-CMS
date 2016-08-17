@@ -77,7 +77,7 @@ namespace Umbraco.Tests.Migrations
 
             var migrationRunner = new MigrationRunner(
                 Mock.Of<IMigrationEntryService>(),
-                Logger, configuredVersion, targetVersion, GlobalSettings.UmbracoMigrationName);
+                Logger, configuredVersion, targetVersion, Constants.Database.UmbracoMigrationName);
 
             var migrations = migrationRunner.OrderedUpgradeMigrations(foundMigrations).ToList();
 
@@ -100,7 +100,7 @@ namespace Umbraco.Tests.Migrations
 
         public UmbracoDatabase GetConfiguredDatabase()
         {
-            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.DatabaseProviders.SqlCe, Mock.Of<ILogger>());
+            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.Database.SqlCe, Mock.Of<ILogger>());
         }
 
 

@@ -43,14 +43,14 @@ namespace Umbraco.Web.WebApi.Filters
                     Path = "/",
                     //must be js readable
                     HttpOnly = false,
-                    Secure = GlobalSettings.UseSSL
+                    Secure = UmbracoConfig.For.GlobalSettings().UseSSL
                 };
 
             var validationCookie = new CookieHeaderValue(AngularAntiForgeryHelper.CsrfValidationCookieName, cookieToken)
             {
                 Path = "/",
                 HttpOnly = true,
-                Secure = GlobalSettings.UseSSL
+                Secure = UmbracoConfig.For.GlobalSettings().UseSSL
             };
 
             context.Response.Headers.AddCookies(new[] { angularCookie, validationCookie });

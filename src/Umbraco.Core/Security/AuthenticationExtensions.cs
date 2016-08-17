@@ -236,9 +236,9 @@ namespace Umbraco.Core.Security
             return CreateAuthTicketAndCookie(
                 http, 
                 userdata.Username, 
-                userDataString, 
+                userDataString,
                 //use the configuration timeout - this is the same timeout that will be used when renewing the ticket.
-                GlobalSettings.TimeOutInMinutes, 
+                UmbracoConfig.For.GlobalSettings().TimeOutInMinutes, 
                 //Umbraco has always persisted it's original cookie for 1 day so we'll keep it that way
                 1440, 
                 UmbracoConfig.For.UmbracoSettings().Security.AuthCookieName,
@@ -423,7 +423,7 @@ namespace Umbraco.Core.Security
                     Path = "/"
                 };
 
-			if (GlobalSettings.UseSSL)
+			if (UmbracoConfig.For.GlobalSettings().UseSSL)
                 cookie.Secure = true;
 
             //ensure http only, this should only be able to be accessed via the server

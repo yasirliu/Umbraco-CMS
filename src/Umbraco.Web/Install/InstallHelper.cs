@@ -146,8 +146,8 @@ namespace Umbraco.Web.Install
         {
             get
             {
-                var databaseSettings = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName];
-                if (GlobalSettings.ConfigurationStatus.IsNullOrWhiteSpace()
+                var databaseSettings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
+                if (UmbracoConfig.For.GlobalSettings().ConfigurationStatus.IsNullOrWhiteSpace()
                     && _umbContext.Application.DatabaseContext.IsConnectionStringConfigured(databaseSettings) == false)
                 {
                     //no version or conn string configured, must be a brand new install

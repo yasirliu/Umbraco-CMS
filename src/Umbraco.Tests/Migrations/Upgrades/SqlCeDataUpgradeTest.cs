@@ -31,7 +31,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
             //Setup the MigrationRunner
             var migrationRunner = new MigrationRunner(
                 Mock.Of<IMigrationEntryService>(),
-                Mock.Of<ILogger>(), configuredVersion, targetVersion, GlobalSettings.UmbracoMigrationName);
+                Mock.Of<ILogger>(), configuredVersion, targetVersion, Constants.Database.UmbracoMigrationName);
 
             bool upgraded = migrationRunner.Execute(db, provider, true);
 
@@ -65,7 +65,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
 
         public override UmbracoDatabase GetConfiguredDatabase()
         {
-            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.DatabaseProviders.SqlCe, Mock.Of<ILogger>());
+            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.Database.SqlCe, Mock.Of<ILogger>());
         }
 
         public override DatabaseProviders GetDatabaseProvider()

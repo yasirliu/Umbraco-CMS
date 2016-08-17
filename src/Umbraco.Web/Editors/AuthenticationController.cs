@@ -141,7 +141,7 @@ namespace Umbraco.Web.Editors
                     var user = Security.GetBackOfficeUser(loginModel.Username);
                     var userDetail = Mapper.Map<UserDetail>(user);
                     //update the userDetail and set their remaining seconds
-                    userDetail.SecondsUntilTimeout = TimeSpan.FromMinutes(GlobalSettings.TimeOutInMinutes).TotalSeconds;
+                    userDetail.SecondsUntilTimeout = TimeSpan.FromMinutes(UmbracoConfig.For.GlobalSettings().TimeOutInMinutes).TotalSeconds;
                     
                     //create a response with the userDetail object
                     var response = Request.CreateResponse(HttpStatusCode.OK, userDetail);
@@ -242,7 +242,7 @@ namespace Umbraco.Web.Editors
             var action = urlHelper.Action("ValidatePasswordResetCode", "BackOffice", 
                 new
                 {
-                    area = GlobalSettings.UmbracoMvcArea,
+                    area = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea,
                     u = userId,
                     r = code
                 });

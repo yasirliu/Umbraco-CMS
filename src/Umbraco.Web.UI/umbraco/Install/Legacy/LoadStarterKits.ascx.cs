@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Install;
 
@@ -24,7 +25,7 @@ namespace Umbraco.Web.UI.Install.Steps.Skinning
             base.OnLoad(e);
 
             //Get the URL for the package install service base url
-            var umbracoPath = Core.Configuration.GlobalSettings.UmbracoMvcArea;
+            var umbracoPath = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea;
             var urlHelper = new UrlHelper(Context.Request.RequestContext);
             //PackageInstallServiceBaseUrl = urlHelper.Action("Index", "InstallPackage", new { area = "UmbracoInstall" });
             PackageInstallServiceBaseUrl = urlHelper.GetUmbracoApiService("Index", "InstallPackage", "UmbracoInstall");

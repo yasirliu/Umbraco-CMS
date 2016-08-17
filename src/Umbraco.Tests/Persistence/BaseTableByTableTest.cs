@@ -51,8 +51,8 @@ namespace Umbraco.Tests.Persistence
 
 
             var dbContext = new DatabaseContext(
-                new DefaultDatabaseFactory(GlobalSettings.UmbracoConnectionName, _logger),
-                _logger, SqlSyntaxProvider, Constants.DatabaseProviders.SqlCe);
+                new DefaultDatabaseFactory(Constants.Database.UmbracoConnectionName, _logger),
+                _logger, SqlSyntaxProvider, Constants.Database.SqlCe);
 
             var repositoryFactory = new RepositoryFactory(cacheHelper, _logger, SqlSyntaxProvider, SettingsForTests.GenerateMockSettings());
 

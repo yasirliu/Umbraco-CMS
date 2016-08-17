@@ -103,7 +103,7 @@ namespace Umbraco.Core
             LegacyParameterEditorAliasConverter.CreateMappingsForCoreEditors();
 
             //create database and service contexts for the app context
-            var dbFactory = new DefaultDatabaseFactory(GlobalSettings.UmbracoConnectionName, ProfilingLogger.Logger);
+            var dbFactory = new DefaultDatabaseFactory(Constants.Database.UmbracoConnectionName, ProfilingLogger.Logger);
             Database.Mapper = new PetaPocoMapper();
 
             var dbContext = new DatabaseContext(

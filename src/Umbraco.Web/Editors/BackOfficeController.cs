@@ -80,8 +80,8 @@ namespace Umbraco.Web.Editors
         public async Task<ActionResult> Default()
         {
             return await RenderDefaultOrProcessExternalLoginAsync(
-                () => View(GlobalSettings.Path.EnsureEndsWith('/') + "Views/Default.cshtml"),
-                () => View(GlobalSettings.Path.EnsureEndsWith('/') + "Views/Default.cshtml"));
+                () => View(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "Views/Default.cshtml"),
+                () => View(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "Views/Default.cshtml"));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Umbraco.Web.Editors
         {
             return await RenderDefaultOrProcessExternalLoginAsync(
                 //The default view to render when there is no external login info or errors
-                () => View(GlobalSettings.Path.EnsureEndsWith('/') + "Views/AuthorizeUpgrade.cshtml"),
+                () => View(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "Views/AuthorizeUpgrade.cshtml"),
                 //The ActionResult to perform if external login is successful
                 () => Redirect("/"));
         }
@@ -365,7 +365,7 @@ namespace Umbraco.Web.Editors
                     {
                         "umbracoSettings", new Dictionary<string, object>
                         {
-                            {"umbracoPath", GlobalSettings.Path},
+                            {"umbracoPath", UmbracoConfig.For.GlobalSettings().Path},
                             {"mediaPath", IOHelper.ResolveUrl(SystemDirectories.Media).TrimEnd('/')},
                             {"appPluginsPath", IOHelper.ResolveUrl(SystemDirectories.AppPlugins).TrimEnd('/')},
                             {
@@ -509,7 +509,7 @@ namespace Umbraco.Web.Editors
             if (defaultResponse == null) throw new ArgumentNullException("defaultResponse");
             if (externalSignInResponse == null) throw new ArgumentNullException("externalSignInResponse");
 
-            ViewBag.UmbracoPath = GlobalSettings.UmbracoMvcArea;
+            ViewBag.UmbracoPath = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea;
 
             //check if there is the TempData with the any token name specified, if so, assign to view bag and render the view
             foreach (var tempDataTokenName in TempDataTokenNames)

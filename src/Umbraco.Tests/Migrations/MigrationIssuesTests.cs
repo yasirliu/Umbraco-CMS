@@ -115,20 +115,20 @@ namespace Umbraco.Tests.Migrations
                 logger,
                 new SemVersion(7, 4, 0),
                 new SemVersion(7, 5, 0),
-                GlobalSettings.UmbracoMigrationName,
+                Constants.Database.UmbracoMigrationName,
 
                 //pass in explicit migrations
                 new DeleteRedirectUrlTable(SqlSyntax, logger),
                 new AddRedirectUrlTable(SqlSyntax, logger)
             );
 
-            var db = new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.DatabaseProviders.SqlCe, Logger);
+            var db = new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.Database.SqlCe, Logger);
 
             var upgraded = migrationRunner.Execute(db, DatabaseProviders.SqlServerCE, true);
             Assert.IsTrue(upgraded);
         }
 
-        [Migration("7.5.0", 99, GlobalSettings.UmbracoMigrationName)]
+        [Migration("7.5.0", 99, Constants.Database.UmbracoMigrationName)]
         public class DeleteRedirectUrlTable : MigrationBase
         {
             public DeleteRedirectUrlTable(ISqlSyntaxProvider sqlSyntax, ILogger logger)

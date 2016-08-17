@@ -135,15 +135,15 @@ namespace Umbraco.Core
                 if (string.IsNullOrEmpty(_providerName) == false)
                     return _providerName;
 
-                _providerName = Constants.DatabaseProviders.SqlServer;
-                if (ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName] != null)
+                _providerName = Constants.Database.SqlServer;
+                if (ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName] != null)
                 {
-                    if (string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName].ProviderName) == false)
-                        _providerName = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName].ProviderName;
+                    if (string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName].ProviderName) == false)
+                        _providerName = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName].ProviderName;
                 }
                 else
                 {
-                    throw new InvalidOperationException("Can't find a connection string with the name '" + GlobalSettings.UmbracoConnectionName + "'");
+                    throw new InvalidOperationException("Can't find a connection string with the name '" + Constants.Database.UmbracoConnectionName + "'");
                 }
                 return _providerName;
             }
@@ -212,10 +212,10 @@ namespace Umbraco.Core
         {
             var provider = DbConnectionExtensions.DetectProviderFromConnectionString(connectionString);
             var databaseProvider = provider.ToString();
-            var providerName = Constants.DatabaseProviders.SqlServer;
+            var providerName = Constants.Database.SqlServer;
             if (databaseProvider.ToLower().Contains("mysql"))
             {
-                providerName = Constants.DatabaseProviders.MySql;
+                providerName = Constants.Database.MySql;
             }
             SaveConnectionString(connectionString, providerName);
             Initialize(string.Empty);
@@ -240,10 +240,10 @@ namespace Umbraco.Core
         
         public string GetDatabaseConnectionString(string server, string databaseName, string user, string password, string databaseProvider, out string providerName)
         {
-            providerName = Constants.DatabaseProviders.SqlServer;
+            providerName = Constants.Database.SqlServer;
             if (databaseProvider.ToLower().Contains("mysql"))
             {
-                providerName = Constants.DatabaseProviders.MySql;
+                providerName = Constants.Database.MySql;
                 return string.Format("Server={0}; Database={1};Uid={2};Pwd={3}", server, databaseName, user, password);
             }
             if (databaseProvider.ToLower().Contains("azure"))
@@ -260,7 +260,7 @@ namespace Umbraco.Core
         /// <param name="databaseName">Name of the database</param>
         public void ConfigureIntegratedSecurityDatabaseConnection(string server, string databaseName)
         {
-            const string providerName = Constants.DatabaseProviders.SqlServer;
+            const string providerName = Constants.Database.SqlServer;
             var connectionString = GetIntegratedSecurityDatabaseConnectionString(server, databaseName);
             SaveConnectionString(connectionString, providerName);
             Initialize(providerName);
@@ -329,9 +329,9 @@ namespace Umbraco.Core
         {
             //Set the connection string for the new datalayer
             var connectionStringSettings = string.IsNullOrEmpty(providerName)
-                                      ? new ConnectionStringSettings(GlobalSettings.UmbracoConnectionName,
+                                      ? new ConnectionStringSettings(Constants.Database.UmbracoConnectionName,
                                                                      connectionString)
-                                      : new ConnectionStringSettings(GlobalSettings.UmbracoConnectionName,
+                                      : new ConnectionStringSettings(Constants.Database.UmbracoConnectionName,
                                                                      connectionString, providerName);
 
             _connectionString = connectionString;
@@ -342,10 +342,10 @@ namespace Umbraco.Core
             var connectionstrings = xml.Root.DescendantsAndSelf("connectionStrings").Single();
 
             // Update connectionString if it exists, or else create a new appSetting for the given key and value
-            var setting = connectionstrings.Descendants("add").FirstOrDefault(s => s.Attribute("name").Value == GlobalSettings.UmbracoConnectionName);
+            var setting = connectionstrings.Descendants("add").FirstOrDefault(s => s.Attribute("name").Value == Constants.Database.UmbracoConnectionName);
             if (setting == null)
                 connectionstrings.Add(new XElement("add",
-                    new XAttribute("name", GlobalSettings.UmbracoConnectionName),
+                    new XAttribute("name", Constants.Database.UmbracoConnectionName),
                     new XAttribute("connectionString", connectionStringSettings),
                     new XAttribute("providerName", providerName)));
             else
@@ -370,23 +370,23 @@ namespace Umbraco.Core
         /// </remarks>
         internal void Initialize()
         {
-            var databaseSettings = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName];
+            var databaseSettings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
             if (databaseSettings != null && string.IsNullOrWhiteSpace(databaseSettings.ConnectionString) == false && string.IsNullOrWhiteSpace(databaseSettings.ProviderName) == false)
             {
-                var providerName = Constants.DatabaseProviders.SqlServer;
+                var providerName = Constants.Database.SqlServer;
                 string connString = null;
-                if (!string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName].ProviderName))
+                if (!string.IsNullOrEmpty(ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName].ProviderName))
                 {
-                    providerName = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName].ProviderName;
-                    connString = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName].ConnectionString;
+                    providerName = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName].ProviderName;
+                    connString = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName].ConnectionString;
                 }
                 Initialize(providerName, connString);
                 
             }
-            else if (ConfigurationManager.AppSettings.ContainsKey(GlobalSettings.UmbracoConnectionName) && string.IsNullOrEmpty(ConfigurationManager.AppSettings[GlobalSettings.UmbracoConnectionName]) == false)
+            else if (ConfigurationManager.AppSettings.ContainsKey(Constants.Database.UmbracoConnectionName) && string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.Database.UmbracoConnectionName]) == false)
             {
                 //A valid connectionstring does not exist, but the legacy appSettings key was found, so we'll reconfigure the conn.string.
-                var legacyConnString = ConfigurationManager.AppSettings[GlobalSettings.UmbracoConnectionName];
+                var legacyConnString = ConfigurationManager.AppSettings[Constants.Database.UmbracoConnectionName];
                 if (legacyConnString.ToLowerInvariant().Contains("sqlce4umbraco"))
                 {
                     ConfigureEmbeddedDatabaseConnection();
@@ -394,8 +394,8 @@ namespace Umbraco.Core
                 else if (legacyConnString.ToLowerInvariant().Contains("tcp:"))
                 {
                     //Must be sql azure
-                    SaveConnectionString(legacyConnString, Constants.DatabaseProviders.SqlServer);
-                    Initialize(Constants.DatabaseProviders.SqlServer);
+                    SaveConnectionString(legacyConnString, Constants.Database.SqlServer);
+                    Initialize(Constants.Database.SqlServer);
                 }
                 else if (legacyConnString.ToLowerInvariant().Contains("datalayer=mysql"))
                 {
@@ -406,18 +406,18 @@ namespace Umbraco.Core
                     foreach (var variable in legacyConnString.Split(';').Where(x => x.ToLowerInvariant().StartsWith("datalayer") == false))
                         connectionStringWithoutDatalayer = string.Format("{0}{1};", connectionStringWithoutDatalayer, variable);
 
-                    SaveConnectionString(connectionStringWithoutDatalayer, Constants.DatabaseProviders.MySql);
-                    Initialize(Constants.DatabaseProviders.MySql);
+                    SaveConnectionString(connectionStringWithoutDatalayer, Constants.Database.MySql);
+                    Initialize(Constants.Database.MySql);
                 }
                 else
                 {
                     //Must be sql
-                    SaveConnectionString(legacyConnString, Constants.DatabaseProviders.SqlServer);
-                    Initialize(Constants.DatabaseProviders.SqlServer);
+                    SaveConnectionString(legacyConnString, Constants.Database.SqlServer);
+                    Initialize(Constants.Database.SqlServer);
                 }
 
                 //Remove the legacy connection string, so we don't end up in a loop if something goes wrong.
-                GlobalSettings.RemoveSetting(GlobalSettings.UmbracoConnectionName);
+                GlobalSettings.RemoveSetting(Constants.Database.UmbracoConnectionName);
                 
             }
             else
@@ -472,7 +472,7 @@ namespace Umbraco.Core
             {
 
                 if (SystemUtilities.GetCurrentTrustLevel() != AspNetHostingPermissionLevel.Unrestricted
-                    && ProviderName == Constants.DatabaseProviders.MySql)
+                    && ProviderName == Constants.Database.MySql)
                 {
                     throw new InvalidOperationException("Cannot use MySql in Medium Trust configuration");
                 }
@@ -525,7 +525,7 @@ namespace Umbraco.Core
                 var installedSchemaVersion = schemaResult.DetermineInstalledVersion();
                 
                 //If Configuration Status is empty and the determined version is "empty" its a new install - otherwise upgrade the existing
-                if (string.IsNullOrEmpty(GlobalSettings.ConfigurationStatus) && installedSchemaVersion.Equals(new Version(0, 0, 0)))
+                if (string.IsNullOrEmpty(UmbracoConfig.For.GlobalSettings().ConfigurationStatus) && installedSchemaVersion.Equals(new Version(0, 0, 0)))
                 {
                     var helper = new DatabaseSchemaHelper(database, _logger, SqlSyntax);
                     helper.CreateDatabaseSchema(true, applicationContext);
@@ -598,11 +598,11 @@ namespace Umbraco.Core
                 // If there is a version in the web.config, we'll take the minimum between the listed migration in the db and what
                 // is declared in the web.config.
                 
-                var currentInstalledVersion = string.IsNullOrEmpty(GlobalSettings.ConfigurationStatus)
+                var currentInstalledVersion = string.IsNullOrEmpty(UmbracoConfig.For.GlobalSettings().ConfigurationStatus)
                     //Take the minimum version between the detected schema version and the installed migration version
                     ? new[] {installedSchemaVersion, installedMigrationVersion}.Min()
                     //Take the minimum version between the installed migration version and the version specified in the config
-                    : new[] { SemVersion.Parse(GlobalSettings.ConfigurationStatus), installedMigrationVersion }.Min();
+                    : new[] { SemVersion.Parse(UmbracoConfig.For.GlobalSettings().ConfigurationStatus), installedMigrationVersion }.Min();
 
                 //Ok, another edge case here. If the current version is a pre-release, 
                 // then we want to ensure all migrations for the current release are executed. 
@@ -613,7 +613,7 @@ namespace Umbraco.Core
 
                 //DO the upgrade!
 
-                var runner = new MigrationRunner(migrationEntryService, _logger, currentInstalledVersion, UmbracoVersion.GetSemanticVersion(), GlobalSettings.UmbracoMigrationName);
+                var runner = new MigrationRunner(migrationEntryService, _logger, currentInstalledVersion, UmbracoVersion.GetSemanticVersion(), Constants.Database.UmbracoMigrationName);
 
                 var upgraded = runner.Execute(database, true);
 
@@ -681,7 +681,7 @@ namespace Umbraco.Core
         private Attempt<Result> CheckReadyForInstall()
         {
             if (SystemUtilities.GetCurrentTrustLevel() != AspNetHostingPermissionLevel.Unrestricted
-                    && ProviderName == Constants.DatabaseProviders.MySql)
+                    && ProviderName == Constants.Database.MySql)
             {
                 throw new InvalidOperationException("Cannot use MySql in Medium Trust configuration");
             }
@@ -730,7 +730,7 @@ namespace Umbraco.Core
         {
             var dbIsSqlCe = false;
             if (databaseSettings != null && databaseSettings.ProviderName != null)
-                dbIsSqlCe = databaseSettings.ProviderName == Constants.DatabaseProviders.SqlCe;
+                dbIsSqlCe = databaseSettings.ProviderName == Constants.Database.SqlCe;
             var sqlCeDatabaseExists = false;
             if (dbIsSqlCe)
             {

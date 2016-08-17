@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Security;
 
 namespace Umbraco.Core.Models.Identity
@@ -16,7 +17,7 @@ namespace Umbraco.Core.Models.Identity
         {
             StartMediaId = -1;
             StartContentId = -1;
-            Culture = Configuration.GlobalSettings.DefaultUILanguage;
+            Culture = UmbracoConfig.For.GlobalSettings().DefaultUILanguage;
         }
 
         public virtual async Task<ClaimsIdentity> GenerateUserIdentityAsync(BackOfficeUserManager<BackOfficeIdentityUser> manager)

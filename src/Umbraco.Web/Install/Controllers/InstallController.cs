@@ -65,7 +65,7 @@ namespace Umbraco.Web.Install.Controllers
             ih.InstallStatus(false, "");
 
             //always ensure full path (see NOTE in the class remarks)
-            return View(GlobalSettings.Path.EnsureEndsWith('/') + "install/views/index.cshtml");
+            return View(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "install/views/index.cshtml");
         }
 
     }

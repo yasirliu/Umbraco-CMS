@@ -66,7 +66,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
             }
 
             //Get the connectionstring settings from config
-            var settings = ConfigurationManager.ConnectionStrings[Core.Configuration.GlobalSettings.UmbracoConnectionName];
+            var settings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
 
             Resolution.Freeze();
 
@@ -104,7 +104,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
 
         public UmbracoDatabase GetConfiguredDatabase()
         {
-            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.DatabaseProviders.SqlCe, Mock.Of<ILogger>());
+            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.Database.SqlCe, Mock.Of<ILogger>());
         }
 
         public string GetDatabaseSpecificSqlScript()

@@ -42,7 +42,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
 
                 //Create the Sql CE database
                 //Get the connectionstring settings from config
-                var settings = ConfigurationManager.ConnectionStrings[Core.Configuration.GlobalSettings.UmbracoConnectionName];
+                var settings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
                 using (var engine = new SqlCeEngine(settings.ConnectionString))
                 {
                     engine.CreateDatabase();
@@ -70,7 +70,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
 
         public override UmbracoDatabase GetConfiguredDatabase()
         {
-            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.DatabaseProviders.SqlCe, Mock.Of<ILogger>());
+            return new UmbracoDatabase("Datasource=|DataDirectory|UmbracoPetaPocoTests.sdf;Flush Interval=1;", Constants.Database.SqlCe, Mock.Of<ILogger>());
         }
 
         public override DatabaseProviders GetDatabaseProvider()

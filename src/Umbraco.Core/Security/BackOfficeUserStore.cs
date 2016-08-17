@@ -8,6 +8,7 @@ using System.Web.Security;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.Models.Identity;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
@@ -75,7 +76,7 @@ namespace Umbraco.Core.Security
             {
                 DefaultToLiveEditing = false,
                 Email = user.Email,
-                Language = user.Culture ?? Configuration.GlobalSettings.DefaultUILanguage,
+                Language = user.Culture ?? UmbracoConfig.For.GlobalSettings().DefaultUILanguage,
                 Name = user.Name,
                 Username = user.UserName,
                 StartContentId = user.StartContentId == 0 ? -1 : user.StartContentId,

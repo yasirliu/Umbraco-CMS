@@ -275,7 +275,7 @@ namespace Umbraco.Web
         /// </summary>
         protected internal void CreateRoutes()
         {
-            var umbracoPath = GlobalSettings.UmbracoMvcArea;
+            var umbracoPath = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea;
 
             //Create the front-end route
             var defaultRoute = RouteTable.Routes.MapRoute(
@@ -297,7 +297,7 @@ namespace Umbraco.Web
 
         private void RoutePluginControllers()
         {
-            var umbracoPath = GlobalSettings.UmbracoMvcArea;
+            var umbracoPath = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea;
 
             //we need to find the plugin controllers and route them
             var pluginControllers =

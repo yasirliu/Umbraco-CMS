@@ -8,7 +8,7 @@ namespace Umbraco.Core.Persistence.SqlSyntax
     /// <summary>
     /// Represents an SqlSyntaxProvider for Sql Server
     /// </summary>
-    [SqlSyntaxProviderAttribute(Constants.DatabaseProviders.SqlServer)]
+    [SqlSyntaxProviderAttribute(Constants.Database.SqlServer)]
     public class SqlServerSyntaxProvider : MicrosoftSqlSyntaxProviderBase<SqlServerSyntaxProvider>
     {
         public SqlServerSyntaxProvider()

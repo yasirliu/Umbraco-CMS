@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Web;
+using Umbraco.Core.Configuration;
 using Umbraco.Core.IO;
 using Umbraco.Core.Services;
 using Umbraco.Web.HealthCheck.Checks.Config;
@@ -109,7 +110,7 @@ namespace Umbraco.Web.HealthCheck.Checks.Security
 
         private HealthCheckStatus CheckHttpsConfigurationSetting()
         {
-            var httpsSettingEnabled = Core.Configuration.GlobalSettings.UseSSL;
+            var httpsSettingEnabled = UmbracoConfig.For.GlobalSettings().UseSSL;
             var uri = HttpContext.Current.Request.Url;
             var actions = new List<HealthCheckAction>();
 

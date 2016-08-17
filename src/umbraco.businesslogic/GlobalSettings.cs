@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Web;
 using System.Web.Hosting;
@@ -16,6 +17,8 @@ namespace umbraco
     /// <summary>
     /// The GlobalSettings Class contains general settings information for the entire Umbraco instance based on information from  web.config appsettings 
     /// </summary>
+    [Obsolete("Use UmbracoSettings.For().UmbracoConfig.For.GlobalSettings() instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class GlobalSettings
     {
 		
@@ -25,7 +28,7 @@ namespace umbraco
         /// <value>The reserved urls.</value>
         public static string ReservedUrls
         {
-            get { return Umbraco.Core.Configuration.GlobalSettings.ReservedUrls; }
+            get { return UmbracoConfig.For.GlobalSettings().ReservedUrls; }
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace umbraco
         /// <value>The reserved paths.</value>
         public static string ReservedPaths
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.ReservedPaths; }
+			get { return UmbracoConfig.For.GlobalSettings().ReservedPaths; }
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace umbraco
         /// <value>The content XML.</value>
         public static string ContentXML
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.ContentXmlFile; }
+			get { return UmbracoConfig.For.GlobalSettings().ContentXmlFile; }
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace umbraco
         /// <value>The storage directory.</value>
         public static string StorageDirectory
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.StorageDirectory; }
+			get { return UmbracoConfig.For.GlobalSettings().StorageDirectory; }
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace umbraco
         /// <value>The path.</value>
         public static string Path
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.Path; }
+			get { return UmbracoConfig.For.GlobalSettings().Path; }
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace umbraco
         /// Gets the database connection string
         /// </summary>
         /// <value>The database connection string.</value>
-        [Obsolete("Use System.ConfigurationManager.ConnectionStrings to get the connection with the key Umbraco.Core.Configuration.GlobalSettings.UmbracoConnectionName instead")]
+        [Obsolete("Use System.ConfigurationManager.ConnectionStrings to get the connection with the key UmbracoConfig.For.GlobalSettings().UmbracoConnectionName instead")]
         public static string DbDSN
         {
 			get { return Umbraco.Core.Configuration.GlobalSettings.DbDsn; }
@@ -92,8 +95,8 @@ namespace umbraco
         /// <value>The configuration status.</value>
         public static string ConfigurationStatus
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.ConfigurationStatus; }
-            set { Umbraco.Core.Configuration.GlobalSettings.ConfigurationStatus = value; }
+			get { return UmbracoConfig.For.GlobalSettings().ConfigurationStatus; }
+            set { Umbraco.Core.Configuration.GlobalSettings.SetConfigurationStatus(value); }
         }
 
         public static AspNetHostingPermissionLevel ApplicationTrustLevel
@@ -108,7 +111,7 @@ namespace umbraco
         /// <param name="value">Value of the setting to be saved.</param>
         protected static void SaveSetting(string key, string value)
         {
-        	Umbraco.Core.Configuration.GlobalSettings.SaveSetting(key, value);
+            Umbraco.Core.Configuration.GlobalSettings.SaveSetting(key, value);
         }
 
         /// <summary>
@@ -145,7 +148,7 @@ namespace umbraco
         /// <value>The time out in minutes.</value>
         public static int TimeOutInMinutes
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.TimeOutInMinutes; }
+			get { return UmbracoConfig.For.GlobalSettings().TimeOutInMinutes; }
         }
 
         /// <summary>
@@ -154,7 +157,7 @@ namespace umbraco
         /// <value><c>true</c> if umbraco uses directory urls; otherwise, <c>false</c>.</value>
         public static bool UseDirectoryUrls
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.UseDirectoryUrls; }
+			get { return UmbracoConfig.For.GlobalSettings().UseDirectoryUrls; }
         }
 
         /// <summary>
@@ -247,7 +250,7 @@ namespace umbraco
         /// <value>The default UI language.</value>
         public static string DefaultUILanguage
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.DefaultUILanguage; }
+			get { return UmbracoConfig.For.GlobalSettings().DefaultUILanguage; }
         }
 
         /// <summary>
@@ -267,7 +270,7 @@ namespace umbraco
         /// </value>
         public static bool HideTopLevelNodeFromPath
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.HideTopLevelNodeFromPath; }
+			get { return UmbracoConfig.For.GlobalSettings().HideTopLevelNodeFromPath; }
         }
 
         /// <summary>
@@ -337,7 +340,7 @@ namespace umbraco
         /// <value><c>true</c> if [use SSL]; otherwise, <c>false</c>.</value>
         public static bool UseSSL
         {
-			get { return Umbraco.Core.Configuration.GlobalSettings.UseSSL; }
+			get { return UmbracoConfig.For.GlobalSettings().UseSSL; }
         }
 
         /// <summary>
@@ -359,7 +362,7 @@ namespace umbraco
         {
 			get
 			{
-                var databaseSettings = ConfigurationManager.ConnectionStrings[Umbraco.Core.Configuration.GlobalSettings.UmbracoConnectionName];
+                var databaseSettings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
                 var dataHelper = DataLayerHelper.CreateSqlHelper(databaseSettings.ConnectionString, false);
 
 				if (HttpContext.Current != null)
@@ -407,7 +410,7 @@ namespace umbraco
     /// Structure that checks in logarithmic time
     /// if a given string starts with one of the added keys.
     /// </summary>
-	[Obsolete("Use Umbraco.Core.Configuration.GlobalSettings.StartsWithContainer container instead")]
+	[Obsolete("Use UmbracoConfig.For.GlobalSettings().StartsWithContainer container instead")]
     public class StartsWithContainer
     {
         /// <summary>Internal sorted list of keys.</summary>

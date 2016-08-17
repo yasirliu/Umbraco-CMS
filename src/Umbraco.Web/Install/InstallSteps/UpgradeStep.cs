@@ -60,10 +60,10 @@ namespace Umbraco.Web.Install.InstallSteps
                 return version;
 
             // If we aren't able to get a result from the umbracoMigrations table then use the version in web.config, if it's available
-            if (string.IsNullOrWhiteSpace(GlobalSettings.ConfigurationStatus))
+            if (string.IsNullOrWhiteSpace(UmbracoConfig.For.GlobalSettings().ConfigurationStatus))
                 return version;
 
-            var configuredVersion = GlobalSettings.ConfigurationStatus;
+            var configuredVersion = UmbracoConfig.For.GlobalSettings().ConfigurationStatus;
 
             string currentComment = null;
 

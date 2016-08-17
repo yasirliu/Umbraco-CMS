@@ -64,7 +64,7 @@ namespace Umbraco.Web.UI.Umbraco.Developer.Packages
 
         private void ShowStarterKits()
         {
-            if (Directory.Exists(Server.MapPath(GlobalSettings.Path.EnsureEndsWith('/') + "install/Legacy")) == false)
+            if (Directory.Exists(Server.MapPath(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "install/Legacy")) == false)
             {
                 InstallationDirectoryNotAvailable.Visible = true;
                 StarterKitNotInstalled.Visible = false;
@@ -73,7 +73,7 @@ namespace Umbraco.Web.UI.Umbraco.Developer.Packages
             }
 
 
-            var starterkitsctrl = (LoadStarterKits)LoadControl(GlobalSettings.Path.EnsureEndsWith('/') + "install/Legacy/loadStarterKits.ascx");
+            var starterkitsctrl = (LoadStarterKits)LoadControl(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "install/Legacy/loadStarterKits.ascx");
             
             ph_starterkits.Controls.Add(starterkitsctrl);
 

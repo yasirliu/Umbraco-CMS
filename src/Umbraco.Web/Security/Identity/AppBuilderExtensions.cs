@@ -204,7 +204,7 @@ namespace Umbraco.Web.Security.Identity
             {
                 var getSecondsOptions = app.CreateUmbracoCookieAuthOptions(
                     //This defines the explicit path read cookies from for this middleware
-                    new[] {string.Format("{0}/backoffice/UmbracoApi/Authentication/GetRemainingTimeoutSeconds", GlobalSettings.Path)});
+                    new[] {string.Format("{0}/backoffice/UmbracoApi/Authentication/GetRemainingTimeoutSeconds", UmbracoConfig.For.GlobalSettings().Path)});
                 getSecondsOptions.Provider = cookieOptions.Provider;
 
                 //This is a custom middleware, we need to return the user's remaining logged in seconds
@@ -305,7 +305,7 @@ namespace Umbraco.Web.Security.Identity
                 //Custom cookie manager so we can filter requests
                 CookieManager = new BackOfficeCookieManager(new SingletonUmbracoContextAccessor()),
                 CookiePath = "/",
-                CookieSecure = GlobalSettings.UseSSL ? CookieSecureOption.Always : CookieSecureOption.SameAsRequest,
+                CookieSecure = UmbracoConfig.For.GlobalSettings().UseSSL ? CookieSecureOption.Always : CookieSecureOption.SameAsRequest,
                 CookieHttpOnly = true,
                 CookieDomain = UmbracoConfig.For.UmbracoSettings().Security.AuthCookieDomain
             }, stage);
@@ -382,8 +382,8 @@ namespace Umbraco.Web.Security.Identity
             var authOptions = new UmbracoBackOfficeCookieAuthOptions(
                 explicitPaths,
                 UmbracoConfig.For.UmbracoSettings().Security,
-                GlobalSettings.TimeOutInMinutes,
-                GlobalSettings.UseSSL);
+                UmbracoConfig.For.GlobalSettings().TimeOutInMinutes,
+                UmbracoConfig.For.GlobalSettings().UseSSL);
             return authOptions;
         }
     }

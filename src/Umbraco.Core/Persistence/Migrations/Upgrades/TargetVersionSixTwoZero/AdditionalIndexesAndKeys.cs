@@ -8,8 +8,8 @@ using Umbraco.Core.Persistence.SqlSyntax;
 
 namespace Umbraco.Core.Persistence.Migrations.Upgrades.TargetVersionSixTwoZero
 {
-    [Migration("7.1.0", 1, GlobalSettings.UmbracoMigrationName)]
-    [Migration("6.2.0", 1, GlobalSettings.UmbracoMigrationName)]
+    [Migration("7.1.0", 1, Constants.Database.UmbracoMigrationName)]
+    [Migration("6.2.0", 1, Constants.Database.UmbracoMigrationName)]
     public class AdditionalIndexesAndKeys : MigrationBase
     {
         public AdditionalIndexesAndKeys(ISqlSyntaxProvider sqlSyntax, ILogger logger) : base(sqlSyntax, logger)

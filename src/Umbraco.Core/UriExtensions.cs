@@ -46,13 +46,13 @@ namespace Umbraco.Core
             var urlPath = fullUrlPath.TrimStart(appPath).EnsureStartsWith('/');
             
             //check if this is in the umbraco back office
-            var isUmbracoPath = urlPath.InvariantStartsWith(GlobalSettings.Path.EnsureStartsWith('/').TrimStart(appPath.EnsureStartsWith('/')).EnsureStartsWith('/'));
+            var isUmbracoPath = urlPath.InvariantStartsWith(UmbracoConfig.For.GlobalSettings().Path.EnsureStartsWith('/').TrimStart(appPath.EnsureStartsWith('/')).EnsureStartsWith('/'));
             //if not, then def not back office
             if (isUmbracoPath == false) return false;
 
             //if its the normal /umbraco path
-            if (urlPath.InvariantEquals("/" + GlobalSettings.UmbracoMvcArea)
-                || urlPath.InvariantEquals("/" + GlobalSettings.UmbracoMvcArea + "/"))
+            if (urlPath.InvariantEquals("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea)
+                || urlPath.InvariantEquals("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/"))
             {
                 return true;
             }
@@ -73,15 +73,15 @@ namespace Umbraco.Core
             }
 
             //check for special back office paths
-            if (urlPath.InvariantStartsWith("/" + GlobalSettings.UmbracoMvcArea + "/BackOffice/")
-                || urlPath.InvariantStartsWith("/" + GlobalSettings.UmbracoMvcArea + "/RestServices/"))
+            if (urlPath.InvariantStartsWith("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/BackOffice/")
+                || urlPath.InvariantStartsWith("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/RestServices/"))
             {
                 return true;
             }
 
             //check for special front-end paths
-            if (urlPath.InvariantStartsWith("/" + GlobalSettings.UmbracoMvcArea + "/Surface/")
-                || urlPath.InvariantStartsWith("/" + GlobalSettings.UmbracoMvcArea + "/Api/"))
+            if (urlPath.InvariantStartsWith("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/Surface/")
+                || urlPath.InvariantStartsWith("/" + UmbracoConfig.For.GlobalSettings().UmbracoMvcArea + "/Api/"))
             {
                 return false;
             }
@@ -123,10 +123,10 @@ namespace Umbraco.Core
         /// <returns></returns>
         internal static bool IsDefaultBackOfficeRequest(this Uri url)
         {
-            if (url.AbsolutePath.InvariantEquals(GlobalSettings.Path.TrimEnd("/"))
-                || url.AbsolutePath.InvariantEquals(GlobalSettings.Path.EnsureEndsWith('/'))
-                || url.AbsolutePath.InvariantEquals(GlobalSettings.Path.EnsureEndsWith('/') + "Default")
-                || url.AbsolutePath.InvariantEquals(GlobalSettings.Path.EnsureEndsWith('/') + "Default/"))
+            if (url.AbsolutePath.InvariantEquals(UmbracoConfig.For.GlobalSettings().Path.TrimEnd("/"))
+                || url.AbsolutePath.InvariantEquals(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/'))
+                || url.AbsolutePath.InvariantEquals(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "Default")
+                || url.AbsolutePath.InvariantEquals(UmbracoConfig.For.GlobalSettings().Path.EnsureEndsWith('/') + "Default/"))
             {
                 return true;
             }

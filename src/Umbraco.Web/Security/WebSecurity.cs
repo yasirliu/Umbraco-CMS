@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using umbraco.businesslogic.Exceptions;
 using Umbraco.Core.Models.Identity;
+using Umbraco.Core.Configuration;
 using Umbraco.Web.Models.ContentEditing;
 using GlobalSettings = Umbraco.Core.Configuration.GlobalSettings;
 using User = umbraco.BusinessLogic.User;
@@ -121,7 +122,7 @@ namespace Umbraco.Web.Security
             _httpContext.SetPrincipalForRequest(userData);
 
             SignInManager.SignInAsync(user, isPersistent: true, rememberBrowser: false).Wait();
-            return TimeSpan.FromMinutes(GlobalSettings.TimeOutInMinutes).TotalSeconds;
+            return TimeSpan.FromMinutes(UmbracoConfig.For.GlobalSettings().TimeOutInMinutes).TotalSeconds;
         }
 
         [Obsolete("This method should not be used, login is performed by the OWIN pipeline, use the overload that returns double and accepts a UserId instead")]
@@ -242,7 +243,7 @@ namespace Umbraco.Web.Security
             user = new Core.Models.Membership.User(writer)
             {
                 Email = email,
-                Language = GlobalSettings.DefaultUILanguage,
+                Language = UmbracoConfig.For.GlobalSettings().DefaultUILanguage,
                 Name = membershipUser.UserName,
                 RawPasswordValue = Guid.NewGuid().ToString("N"), //Need to set this to something - will not be used though
                 Username = membershipUser.UserName,
@@ -385,7 +386,7 @@ namespace Umbraco.Web.Security
         internal ValidateRequestAttempt AuthorizeRequest(bool throwExceptions = false)
         {
             // check for secure connection
-            if (GlobalSettings.UseSSL && _httpContext.Request.IsSecureConnection == false)
+            if (UmbracoConfig.For.GlobalSettings().UseSSL && _httpContext.Request.IsSecureConnection == false)
             {
                 if (throwExceptions) throw new UserAuthorizationException("This installation requires a secure connection (via SSL). Please update the URL to include https://");
                 return ValidateRequestAttempt.FailedNoSsl;

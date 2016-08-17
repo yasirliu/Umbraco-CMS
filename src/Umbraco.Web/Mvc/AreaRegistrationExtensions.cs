@@ -49,7 +49,7 @@ namespace Umbraco.Web.Mvc
             Mandate.ParameterNotNull(routes, "routes");
             Mandate.ParameterNotNull(defaultId, "defaultId");
 
-            var umbracoArea = GlobalSettings.UmbracoMvcArea;
+            var umbracoArea = UmbracoConfig.For.GlobalSettings().UmbracoMvcArea;
 
             //routes are explicitly named with controller names and IDs
             var url = umbracoArea + "/" + 

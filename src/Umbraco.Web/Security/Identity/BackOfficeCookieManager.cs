@@ -32,7 +32,7 @@ namespace Umbraco.Web.Security.Identity
         {
             _umbracoContextAccessor = umbracoContextAccessor;
             _explicitPaths = explicitPaths == null ? null : explicitPaths.ToArray();
-            _getRemainingSecondsPath = string.Format("{0}/backoffice/UmbracoApi/Authentication/GetRemainingTimeoutSeconds", GlobalSettings.Path);
+            _getRemainingSecondsPath = string.Format("{0}/backoffice/UmbracoApi/Authentication/GetRemainingTimeoutSeconds", UmbracoConfig.For.GlobalSettings().Path);
         }
 
         /// <summary>

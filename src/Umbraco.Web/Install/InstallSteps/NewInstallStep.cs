@@ -118,11 +118,11 @@ namespace Umbraco.Web.Install.InstallSteps
         public override bool RequiresExecution(UserModel model)
         {
             //now we have to check if this is really a new install, the db might be configured and might contain data
-            var databaseSettings = ConfigurationManager.ConnectionStrings[GlobalSettings.UmbracoConnectionName];
+            var databaseSettings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
 
             //if there's already a version then there should def be a user but in some cases someone may have 
             // left a version number in there but cleared out their db conn string, in that case, it's really a new install.
-            if (GlobalSettings.ConfigurationStatus.IsNullOrWhiteSpace() == false && databaseSettings != null) return false;
+            if (UmbracoConfig.For.GlobalSettings().ConfigurationStatus.IsNullOrWhiteSpace() == false && databaseSettings != null) return false;
 
             if (_applicationContext.DatabaseContext.IsConnectionStringConfigured(databaseSettings)
                 && _applicationContext.DatabaseContext.IsDatabaseConfigured)

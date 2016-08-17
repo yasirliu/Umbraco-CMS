@@ -25,7 +25,7 @@ namespace Umbraco.Tests.Migrations.Upgrades
 
         public override UmbracoDatabase GetConfiguredDatabase()
         {
-            return new UmbracoDatabase(@"server=.\SQLEXPRESS;database=EmptyForTest;user id=umbraco;password=umbraco", Constants.DatabaseProviders.SqlServer, Mock.Of<ILogger>());
+            return new UmbracoDatabase(@"server=.\SQLEXPRESS;database=EmptyForTest;user id=umbraco;password=umbraco", Constants.Database.SqlServer, Mock.Of<ILogger>());
         }
 
         public override DatabaseProviders GetDatabaseProvider()

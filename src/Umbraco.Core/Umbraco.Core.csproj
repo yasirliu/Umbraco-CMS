@@ -221,6 +221,7 @@
     <Compile Include="Configuration\Grid\IGridConfig.cs" />
     <Compile Include="Configuration\Grid\IGridEditorConfig.cs" />
     <Compile Include="Configuration\Grid\IGridEditorsConfig.cs" />
+    <Compile Include="Configuration\IGlobalSettings.cs" />
     <Compile Include="Configuration\UmbracoConfig.cs" />
     <Compile Include="Configuration\UmbracoConfigurationSection.cs" />
     <Compile Include="Configuration\UmbracoSettings\AppCodeFileExtensionsCollection.cs" />
@@ -303,8 +304,6 @@
     <Compile Include="Configuration\UmbracoSettings\WebRoutingElement.cs" />
     <Compile Include="Configuration\UmbracoVersion.cs" />
     <Compile Include="Attempt.cs" />
-    <Compile Include="Constants-Examine.cs" />
-    <Compile Include="Constants-Icons.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="CoreBootManager.cs" />
     <Compile Include="DatabaseContext.cs" />
@@ -1364,6 +1363,21 @@
     <Compile Include="TypeHelper.cs" />
     <Compile Include="UmbracoApplicationBase.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Constants-Security.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Constants-Database.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Constants-Trees.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Constants-Examine.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Constants-Icons.cs">
+      <DependentUpon>Constants.cs</DependentUpon>
+    </Compile>
     <Compile Include="Constants-Applications.cs">
       <DependentUpon>Constants.cs</DependentUpon>
     </Compile>

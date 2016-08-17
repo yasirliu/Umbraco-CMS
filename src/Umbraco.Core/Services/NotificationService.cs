@@ -334,7 +334,7 @@ namespace Umbraco.Core.Services
                     "<tr><td colspan=\"2\" style=\"border-bottom: 1px solid #CCC; font-size: 2px;\">&nbsp;</td></tr>");
             }
 
-            string protocol = GlobalSettings.UseSSL ? "https" : "http";
+            string protocol = UmbracoConfig.For.GlobalSettings().UseSSL ? "https" : "http";
 
 
             string[] subjectVars = {
@@ -382,7 +382,7 @@ namespace Umbraco.Core.Services
 
             // nh, issue 30724. Due to hardcoded http strings in resource files, we need to check for https replacements here
             // adding the server name to make sure we don't replace external links
-            if (GlobalSettings.UseSSL && string.IsNullOrEmpty(mail.Body) == false)
+            if (UmbracoConfig.For.GlobalSettings().UseSSL && string.IsNullOrEmpty(mail.Body) == false)
             {
                 string serverName = http.Request.ServerVariables["SERVER_NAME"];
                 mail.Body = mail.Body.Replace(
@@ -414,7 +414,7 @@ namespace Umbraco.Core.Services
 
         private static string ReplaceLinks(string text, HttpRequestBase request)
         {
-            string domain = GlobalSettings.UseSSL ? "https://" : "http://";
+            string domain = UmbracoConfig.For.GlobalSettings().UseSSL ? "https://" : "http://";
             domain += request.ServerVariables["SERVER_NAME"] + ":" + request.Url.Port + "/";
             text = text.Replace("href=\"/", "href=\"" + domain);
             text = text.Replace("src=\"/", "src=\"" + domain);

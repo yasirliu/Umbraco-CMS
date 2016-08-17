@@ -69,6 +69,7 @@ namespace Umbraco.Core.Configuration
 
         private IDashboardSection _dashboardSection;
         private IUmbracoSettingsSection _umbracoSettings;
+        private IGlobalSettings _globalSettings;
         private IBaseRestSection _baseRestExtensions;
         private IGridConfig _gridConfig;
 
@@ -164,6 +165,28 @@ namespace Umbraco.Core.Configuration
             }
 
             return _gridConfig;
+        }
+
+        /// <summary>
+        /// Only for testing
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetGlobalConfig(IGlobalSettings value)
+        {
+            _globalSettings = value;
+        }
+
+        /// <summary>
+        /// Gets the IGridConfig
+        /// </summary>
+        public IGlobalSettings GlobalSettings()
+        {
+            if (_globalSettings == null)
+            {
+                _globalSettings = new GlobalSettings();
+            }
+
+            return _globalSettings;
         }
 
         //TODO: Add other configurations here !

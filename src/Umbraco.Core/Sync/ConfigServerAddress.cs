@@ -13,7 +13,7 @@ namespace Umbraco.Core.Sync
         {
             var webServicesUrl = IOHelper.ResolveUrl(SystemDirectories.WebServices);
 
-            var protocol = GlobalSettings.UseSSL ? "https" : "http";
+            var protocol = UmbracoConfig.For.GlobalSettings().UseSSL ? "https" : "http";
             if (n.ForceProtocol.IsNullOrWhiteSpace() == false)
                 protocol = n.ForceProtocol;
             var domain = n.ServerAddress;

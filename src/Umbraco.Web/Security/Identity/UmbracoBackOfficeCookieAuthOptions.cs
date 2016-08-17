@@ -18,7 +18,7 @@ namespace Umbraco.Web.Security.Identity
         public int LoginTimeoutMinutes { get; private set; }
 
         public UmbracoBackOfficeCookieAuthOptions()
-            : this(UmbracoConfig.For.UmbracoSettings().Security, GlobalSettings.TimeOutInMinutes, GlobalSettings.UseSSL)
+            : this(UmbracoConfig.For.UmbracoSettings().Security, UmbracoConfig.For.GlobalSettings().TimeOutInMinutes, UmbracoConfig.For.GlobalSettings().UseSSL)
         {            
         }
         

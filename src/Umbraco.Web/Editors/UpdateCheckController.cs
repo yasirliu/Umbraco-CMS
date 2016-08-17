@@ -62,7 +62,7 @@ namespace Umbraco.Web.Editors
                         Path = "/",
                         Expires = DateTimeOffset.Now.AddDays(GlobalSettings.VersionCheckPeriod),
                         HttpOnly = true,
-                        Secure = GlobalSettings.UseSSL
+                        Secure = UmbracoConfig.For.GlobalSettings().UseSSL
                     };
                 context.Response.Headers.AddCookies(new[] { cookie });
             }

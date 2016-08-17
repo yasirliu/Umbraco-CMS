@@ -16,22 +16,19 @@ using Umbraco.Core.Security;
 
 namespace Umbraco.Core.Configuration
 {
-    //NOTE: Do not expose this class ever until we cleanup all configuration including removal of static classes, etc...
-    // we have this two tasks logged:
-    // http://issues.umbraco.org/issue/U4-58
-    // http://issues.umbraco.org/issue/U4-115	
-
-    //TODO:  Replace checking for if the app settings exist and returning an empty string, instead return the defaults!
+    public static class GlobalSettingsExtensions
+    {
+        
+    }
 
     /// <summary>
     /// The GlobalSettings Class contains general settings information for the entire Umbraco instance based on information from  web.config appsettings 
     /// </summary>
-    internal class GlobalSettings
+    internal class GlobalSettings : IGlobalSettings
     {
 
         #region Private static fields
-
-        private static Version _version;
+        
         private static readonly object Locker = new object();
         //make this volatile so that we can ensure thread safety with a double check lock
     	private static volatile string _reservedUrlsCache;
@@ -68,7 +65,7 @@ namespace Umbraco.Core.Configuration
         /// Gets the reserved urls from web.config.
         /// </summary>
         /// <value>The reserved urls.</value>
-        public static string ReservedUrls
+        public string ReservedUrls
         {
             get
             {                
@@ -90,7 +87,7 @@ namespace Umbraco.Core.Configuration
         /// Gets the reserved paths from web.config
         /// </summary>
         /// <value>The reserved paths.</value>
-        public static string ReservedPaths
+        public string ReservedPaths
         {
             get
             {
@@ -112,7 +109,6 @@ namespace Umbraco.Core.Configuration
                 }
                 return _reservedPaths;
             }
-            internal set { _reservedPaths = value; }
         }
 
         /// <summary>
@@ -122,7 +118,7 @@ namespace Umbraco.Core.Configuration
         /// <remarks>
         /// Defaults to ~/App_Data/umbraco.config
         /// </remarks>
-        public static string ContentXmlFile
+        public string ContentXmlFile
         {
             get
             {
@@ -133,10 +129,10 @@ namespace Umbraco.Core.Configuration
         }
 
         /// <summary>
-        /// Gets the path to the storage directory (/data by default).
+        /// Gets the path to the storage directory
         /// </summary>
         /// <value>The storage directory.</value>
-        public static string StorageDirectory
+        public string StorageDirectory
         {
             get
             {
@@ -150,7 +146,7 @@ namespace Umbraco.Core.Configuration
         /// Gets the path to umbraco's root directory (/umbraco by default).
         /// </summary>
         /// <value>The path.</value>
-        public static string Path
+        public string Path
         {
             get
             {
@@ -164,17 +160,14 @@ namespace Umbraco.Core.Configuration
         /// This returns the string of the MVC Area route.
         /// </summary>
         /// <remarks>
-        /// THIS IS TEMPORARY AND SHOULD BE REMOVED WHEN WE MIGRATE/UPDATE THE CONFIG SETTINGS TO BE A REAL CONFIG SECTION
-        /// AND SHOULD PROBABLY BE HANDLED IN A MORE ROBUST WAY.
-        /// 
         /// This will return the MVC area that we will route all custom routes through like surface controllers, etc...
         /// We will use the 'Path' (default ~/umbraco) to create it but since it cannot contain '/' and people may specify a path of ~/asdf/asdf/admin
-        /// we will convert the '/' to '-' and use that as the path. its a bit lame but will work.
+        /// we will convert the '/' to '-' and use that as the path. 
 		/// 
         /// We also make sure that the virtual directory (SystemDirectories.Root) is stripped off first, otherwise we'd end up with something
         /// like "MyVirtualDirectory-Umbraco" instead of just "Umbraco".
         /// </remarks>
-        public static string UmbracoMvcArea
+        public string UmbracoMvcArea
         {
             get
             {
@@ -195,11 +188,13 @@ namespace Umbraco.Core.Configuration
         /// folder since the CSS paths to images depend on it.
         /// </summary>
         /// <value>The path.</value>
-        public static string ClientPath
+        internal static string ClientPath
         {
             get
             {
-                return Path + "/../umbraco_client";
+                //TODO: This is sort of obsolete
+
+                return UmbracoConfig.For.GlobalSettings().Path + "/../umbraco_client";
             }
         }
 
@@ -208,11 +203,11 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The database connection string.</value>
         [Obsolete("Use System.Configuration.ConfigurationManager.ConnectionStrings[\"umbracoDbDSN\"] instead")]
-        public static string DbDsn
+        internal static string DbDsn
         {
             get
             {
-                var settings = ConfigurationManager.ConnectionStrings[UmbracoConnectionName];
+                var settings = ConfigurationManager.ConnectionStrings[Constants.Database.UmbracoConnectionName];
                 var connectionString = string.Empty;
 
                 if (settings != null)
@@ -241,34 +236,31 @@ namespace Umbraco.Core.Configuration
                 }
             }
         }
-
-        //TODO: Move these to constants!
-        public const string UmbracoConnectionName = "umbracoDbDSN";
-        public const string UmbracoMigrationName = "Umbraco";
-
+        
         /// <summary>
         /// Gets or sets the configuration status. This will return the version number of the currently installed umbraco instance.
         /// </summary>
         /// <value>The configuration status.</value>
-        public static string ConfigurationStatus
+        public string ConfigurationStatus
         {
             get
             {
                 return ConfigurationManager.AppSettings.ContainsKey("umbracoConfigurationStatus")
                     ? ConfigurationManager.AppSettings["umbracoConfigurationStatus"]
                     : string.Empty;
-            }
-            set
-            {
-                SaveSetting("umbracoConfigurationStatus", value);
-            }
+            }            
+        }
+
+        internal static void SetConfigurationStatus(string value)
+        {
+            SaveSetting("umbracoConfigurationStatus", value);
         }
         
         /// <summary>
         /// Gets or sets the Umbraco members membership providers' useLegacyEncoding state. This will return a boolean
         /// </summary>
         /// <value>The useLegacyEncoding status.</value>
-        public static bool UmbracoMembershipProviderLegacyEncoding
+        internal static bool UmbracoMembershipProviderLegacyEncoding
         {
             get
             {
@@ -279,12 +271,12 @@ namespace Umbraco.Core.Configuration
                 SetMembershipProvidersLegacyEncoding(Constants.Conventions.Member.UmbracoMemberProviderName, value);
             }
         }
-        
+
         /// <summary>
         /// Gets or sets the Umbraco users membership providers' useLegacyEncoding state. This will return a boolean
         /// </summary>
         /// <value>The useLegacyEncoding status.</value>
-        public static bool UmbracoUsersMembershipProviderLegacyEncoding
+        internal static bool UmbracoUsersMembershipProviderLegacyEncoding
         {
             get
             {
@@ -396,10 +388,12 @@ namespace Umbraco.Core.Configuration
         /// Gets a value indicating whether umbraco is running in [debug mode].
         /// </summary>
         /// <value><c>true</c> if [debug mode]; otherwise, <c>false</c>.</value>
-        public static bool DebugMode
+        internal static bool DebugMode
         {
             get
             {
+                //TODO: This is sort of obsolete
+
                 try
                 {
                     if (HttpContext.Current != null)
@@ -428,7 +422,7 @@ namespace Umbraco.Core.Configuration
             {
                 try
                 {
-                    string configStatus = ConfigurationStatus;
+                    string configStatus = UmbracoConfig.For.GlobalSettings().ConfigurationStatus;
                     string currentVersion = UmbracoVersion.GetSemanticVersion().ToSemanticString();
 
 
@@ -451,7 +445,7 @@ namespace Umbraco.Core.Configuration
         /// Gets the time out in minutes.
         /// </summary>
         /// <value>The time out in minutes.</value>
-        public static int TimeOutInMinutes
+        public int TimeOutInMinutes
         {
             get
             {
@@ -470,7 +464,7 @@ namespace Umbraco.Core.Configuration
         /// Gets a value indicating whether umbraco uses directory urls.
         /// </summary>
         /// <value><c>true</c> if umbraco uses directory urls; otherwise, <c>false</c>.</value>
-        public static bool UseDirectoryUrls
+        public bool UseDirectoryUrls
         {
             get
             {
@@ -489,10 +483,12 @@ namespace Umbraco.Core.Configuration
         /// Returns a string value to determine if umbraco should skip version-checking.
         /// </summary>
         /// <value>The version check period in days (0 = never).</value>
-        public static int VersionCheckPeriod
+        internal static int VersionCheckPeriod
         {
             get
             {
+                //TODO: Haven't exposed this on the interface since it's sort of internal (for now)
+
                 try
                 {
                     return int.Parse(ConfigurationManager.AppSettings["umbracoVersionCheckPeriod"]);
@@ -509,7 +505,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value><c>"true"</c> if version xslt extensions are disabled, otherwise, <c>"false"</c></value>
         [Obsolete("This is no longer used and will be removed from the codebase in future releases")]
-        public static string DisableXsltExtensions
+        internal static string DisableXsltExtensions
         {
             get
             {
@@ -523,6 +519,8 @@ namespace Umbraco.Core.Configuration
         {
             get
             {
+                //TODO: Haven't exposed this on the interface since it's sort of internal (for now)
+
                 //defaults to false
                 return ConfigurationManager.AppSettings.ContainsKey("umbracoContentXMLUseLocalTemp") 
                     && bool.Parse(ConfigurationManager.AppSettings["umbracoContentXMLUseLocalTemp"]); //default to false
@@ -534,7 +532,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value><c>"true"</c> if Xhtml mode is enable, otherwise, <c>"false"</c></value>
         [Obsolete("This is no longer used and will be removed from the codebase in future releases")]
-        public static string EditXhtmlMode
+        internal static string EditXhtmlMode
         {
             get { return "true"; }
         }
@@ -543,7 +541,7 @@ namespace Umbraco.Core.Configuration
         /// Gets the default UI language.
         /// </summary>
         /// <value>The default UI language.</value>
-        public static string DefaultUILanguage
+        public string DefaultUILanguage
         {
             get
             {
@@ -557,10 +555,12 @@ namespace Umbraco.Core.Configuration
         /// Gets the profile URL.
         /// </summary>
         /// <value>The profile URL.</value>
-        public static string ProfileUrl
+        internal static string ProfileUrl
         {
             get
             {
+                //TODO: Pretty sure this is obsolete
+
                 //the default will be 'profiler'
                 return ConfigurationManager.AppSettings.ContainsKey("umbracoProfileUrl")
                     ? ConfigurationManager.AppSettings["umbracoProfileUrl"]
@@ -574,7 +574,7 @@ namespace Umbraco.Core.Configuration
         /// <value>
         /// 	<c>true</c> if umbraco hides top level nodes from urls; otherwise, <c>false</c>.
         /// </value>
-        public static bool HideTopLevelNodeFromPath
+        public bool HideTopLevelNodeFromPath
         {
             get
             {
@@ -594,7 +594,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The current version.</value>
         [Obsolete("Use Umbraco.Core.Configuration.UmbracoVersion.Current instead", false)]
-        public static string CurrentVersion
+        internal static string CurrentVersion
         {
             get { return UmbracoVersion.GetSemanticVersion().ToSemanticString(); }
         }
@@ -604,7 +604,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The major version number.</value>
         [Obsolete("Use Umbraco.Core.Configuration.UmbracoVersion.Current instead", false)]
-        public static int VersionMajor
+        internal static int VersionMajor
         {
             get
             {
@@ -617,7 +617,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The minor version number.</value>
         [Obsolete("Use Umbraco.Core.Configuration.UmbracoVersion.Current instead", false)]
-        public static int VersionMinor
+        internal static int VersionMinor
         {
             get
             {
@@ -630,7 +630,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The patch version number.</value>
         [Obsolete("Use Umbraco.Core.Configuration.UmbracoVersion.Current instead", false)]
-        public static int VersionPatch
+        internal static int VersionPatch
         {
             get
             {
@@ -643,7 +643,7 @@ namespace Umbraco.Core.Configuration
         /// </summary>
         /// <value>The version comment.</value>
         [Obsolete("Use Umbraco.Core.Configuration.UmbracoVersion.Current instead", false)]
-        public static string VersionComment
+        internal static string VersionComment
         {
             get
             {
@@ -659,11 +659,15 @@ namespace Umbraco.Core.Configuration
         /// <returns></returns>
         public static bool RequestIsInUmbracoApplication(HttpContext context)
         {
+            //TODO: Move this to an extension method
+
             return context.Request.Path.ToLower().IndexOf(IOHelper.ResolveUrl(SystemDirectories.Umbraco).ToLower()) > -1;
         }
 
         public static bool RequestIsInUmbracoApplication(HttpContextBase context)
         {
+            //TODO: Move this to an extension method
+
             return context.Request.Path.ToLower().IndexOf(IOHelper.ResolveUrl(SystemDirectories.Umbraco).ToLower()) > -1;
         }
 
@@ -671,7 +675,7 @@ namespace Umbraco.Core.Configuration
         /// Gets a value indicating whether umbraco should force a secure (https) connection to the backoffice.
         /// </summary>
         /// <value><c>true</c> if [use SSL]; otherwise, <c>false</c>.</value>
-        public static bool UseSSL
+        public bool UseSSL
         {
             get
             {
@@ -690,10 +694,12 @@ namespace Umbraco.Core.Configuration
         /// Gets the umbraco license.
         /// </summary>
         /// <value>The license.</value>
-        public static string License
+        internal static string License
         {
             get
             {
+                //TODO: Pretty sure this is obsolete
+
                 string license =
                     "<A href=\"http://umbraco.org/redir/license\" target=\"_blank\">the open source license MIT</A>. The umbraco UI is freeware licensed under the umbraco license.";
 
@@ -758,6 +764,8 @@ namespace Umbraco.Core.Configuration
         /// </returns>
         public static bool IsReservedPathOrUrl(string url)
         {
+            //TODO: Move this to an extension method
+
             if (_reservedUrlsCache == null)
             {
                 lock (Locker)
@@ -765,8 +773,8 @@ namespace Umbraco.Core.Configuration
                     if (_reservedUrlsCache == null)
                     {
                         // store references to strings to determine changes
-                        _reservedPathsCache = GlobalSettings.ReservedPaths;
-                        _reservedUrlsCache = GlobalSettings.ReservedUrls;
+                        _reservedPathsCache = UmbracoConfig.For.GlobalSettings().ReservedPaths;
+                        _reservedUrlsCache = UmbracoConfig.For.GlobalSettings().ReservedUrls;
                         
                         // add URLs and paths to a new list
                         var newReservedList = new HashSet<string>();

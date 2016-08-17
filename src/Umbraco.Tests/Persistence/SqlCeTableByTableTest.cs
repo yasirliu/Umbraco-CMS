@@ -46,7 +46,7 @@ namespace Umbraco.Tests.Persistence
             }
             
             _database = new Database("Datasource=|DataDirectory|test.sdf;Flush Interval=1;",
-                                     Constants.DatabaseProviders.SqlCe);
+                                     Constants.Database.SqlCe);
         }
 
         [TearDown]
