@@ -19,30 +19,27 @@ angular.module("umbraco").controller("Umbraco.Overlays.TreePickerController",
 
 		  $scope.model.selection = [];
 
+
 		  $scope.init = function(contentType) {
 
 			  if(contentType === "content") {
-				  entityType = "Document";
+			      entityType = "Document";
 				  if(!$scope.model.title) {
 					  $scope.model.title = localizationService.localize("defaultdialogs_selectContent");
 				  }
 			  } else if(contentType === "member") {
-				  entityType = "Member";
+			      entityType = "Member";
 				  if(!$scope.model.title) {
 					  $scope.model.title = localizationService.localize("defaultdialogs_selectMember");
 				  }
 			  } else if(contentType === "media") {
-				  entityType = "Media";
+			      entityType = "Media";
 				  if(!$scope.model.title) {
 					  $scope.model.title = localizationService.localize("defaultdialogs_selectMedia");
 				  }
 			  }
 		  }
 		
-		// Search is only working for content, media and member section so we will remove it from everything else
-		if($scope.section === "content" || $scope.section === "media" || $scope.section === "member" ) {
-			$scope.enableSearh = true;
-		}
 
 	    //create the custom query string param for this tree
 	    $scope.customTreeParams = dialogOptions.startNodeId ? "startNodeId=" + dialogOptions.startNodeId : "";
@@ -61,6 +58,7 @@ angular.module("umbraco").controller("Umbraco.Overlays.TreePickerController",
 	    if (dialogOptions.minNumber) {
 	        dialogOptions.minNumber = parseInt(dialogOptions.minNumber, 10);
 	    }
+
 	    if (dialogOptions.maxNumber) {
 	        dialogOptions.maxNumber = parseInt(dialogOptions.maxNumber, 10);
 	    }
@@ -71,6 +69,23 @@ angular.module("umbraco").controller("Umbraco.Overlays.TreePickerController",
 	    else if (dialogOptions.section === "media") {
 	        entityType = "Media";
 	    }
+
+	    // Search and listviews is only working for content, media and member section so we will remove it from everything else
+	    if ($scope.section === "content" || $scope.section === "media" || $scope.section === "member") {
+	        $scope.enableSearh = true;
+
+	        //if a alternative startnode is used, we need to check if it is a container
+	        if (dialogOptions.startNodeId) {
+
+	            entityResource.getById(dialogOptions.startNodeId, entityType).then(function (node) {
+	                if (node.metaData.IsContainer) {
+	                    alert("I AM A CONTAINER!");
+	                    $scope.nodeIsContainer = true;
+	                }
+	            });
+	        }
+	    }
+	   
 
 	    //Configures filtering
 	    if (dialogOptions.filter) {
